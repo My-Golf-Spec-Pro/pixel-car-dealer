@@ -25,7 +25,7 @@
       box-shadow: 0 15px 30px rgba(0,0,0,0.7);
     }
     
-    /* 上部ステータスヘッダー */
+    /* ステータスヘッダー */
     .status-bar {
       display: flex;
       justify-content: space-between;
@@ -48,7 +48,7 @@
     .canvas-wrapper {
       position: relative;
       width: 1000px;
-      height: 500px;
+      height: 520px;
       background-color: #000;
     }
     canvas {
@@ -58,37 +58,37 @@
       image-rendering: pixelated;
     }
 
-    /* メッセージ・案内表示バー */
+    /* ガイドメッセージ */
     .message-box {
       background: #0f172a;
       border-top: 2px solid #1e293b;
-      padding: 12px 20px;
+      padding: 10px 20px;
       color: #fde047;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
       text-align: center;
-      height: 48px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* 下部操作メニュー・タブボタン */
+    /* 下部操作メニュー */
     .control-panel {
-      padding: 15px 20px;
+      padding: 12px 20px;
       background: #171923;
     }
     .car-selector {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .car-card {
       background: #2d3748;
       border: 2px solid #4a5568;
       border-radius: 8px;
-      padding: 10px 6px;
+      padding: 8px 4px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
@@ -99,12 +99,12 @@
       transform: translateY(-2px);
     }
     .car-card.disabled {
-      opacity: 0.4;
+      opacity: 0.35;
       cursor: not-allowed;
       filter: grayscale(0.8);
     }
-    .car-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #f3f4f6; }
-    .car-price { font-size: 12px; color: #38bdf8; font-weight: bold; }
+    .car-name { font-size: 13px; font-weight: bold; margin-bottom: 2px; color: #f3f4f6; }
+    .car-price { font-size: 11px; color: #38bdf8; font-weight: bold; }
 
     .action-buttons {
       display: flex;
@@ -112,7 +112,7 @@
     }
     button {
       flex: 1;
-      padding: 12px;
+      padding: 10px;
       font-size: 15px;
       font-weight: bold;
       color: #ffffff;
@@ -123,32 +123,26 @@
     }
     .btn-sell { background: #059669; }
     .btn-sell:hover:not(:disabled) { background: #10b981; }
-    .btn-clear { background: #dc2626; }
-    .btn-clear:hover:not(:disabled) { background: #ef4444; }
     button:disabled { background: #374151; color: #9ca3af; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
 <div id="game-container">
-  <!-- ヘッダーUI -->
   <div class="status-bar">
     <div class="status-item">クルマ屋 <span>Lv.1</span></div>
     <div class="status-item">資金: <span id="money">500</span>万円</div>
     <div class="status-item">展示数: <span id="car-count">0</span>/3</div>
   </div>
 
-  <!-- メインCanvas -->
   <div class="canvas-wrapper">
-    <canvas id="gameCanvas" width="1000" height="500"></canvas>
+    <canvas id="gameCanvas" width="1000" height="520"></canvas>
   </div>
 
-  <!-- ガイドメッセージ -->
   <div class="message-box" id="message">
-    開店しました！下から仕入れたい車種を選んで展示場に並べましょう。
+    開店しました！下の車種から好きな車を選んで展示場に並べましょう。
   </div>
 
-  <!-- 下部操作エリア -->
   <div class="control-panel">
     <div class="car-selector">
       <div class="car-card" id="car-0" onclick="buyCar(0)">
@@ -174,120 +168,200 @@
     </div>
 
     <div class="action-buttons">
-      <button class="btn-sell" id="sell-btn" onclick="sellCar()" disabled>お客様に商談・売却する</button>
+      <button class="btn-sell" id="sell-btn" onclick="sellCar()" disabled>商談して売却する</button>
     </div>
   </div>
 </div>
 
 <script>
-  // --- 車のマスタデータ ---
+  // --- 5車種のデータ ---
   const CAR_TYPES = [
-    { id: 0, name: 'ミニスマイル', cost: 80, sell: 110, sx: 0, sw: 190, sh: 140 },
-    { id: 1, name: 'シティラン', cost: 100, sell: 140, sx: 190, sw: 190, sh: 140 },
-    { id: 2, name: 'ファミリア8', cost: 220, sell: 290, sx: 380, sw: 210, sh: 140 },
-    { id: 3, name: 'ワイルドクロス', cost: 250, sell: 330, sx: 590, sw: 190, sh: 140 },
-    { id: 4, name: 'ロイヤルセダン', cost: 350, sell: 460, sx: 780, sw: 220, sh: 140 }
+    { id: 0, name: 'ミニスマイル', cost: 80, sell: 110, type: 'compact_red' },
+    { id: 1, name: 'シティラン', cost: 100, sell: 140, type: 'compact_blue' },
+    { id: 2, name: 'ファミリア8', cost: 220, sell: 290, type: 'minivan_gray' },
+    { id: 3, name: 'ワイルドクロス', cost: 250, sell: 330, type: 'suv_red' },
+    { id: 4, name: 'ロイヤルセダン', cost: 350, sell: 460, type: 'sedan_black' }
   ];
 
-  // 店舗の青ラグ（展示スペース）の描画座標 (Canvas 1000x500 内)
+  // 展示用ラグの座標
   const RUG_POSITIONS = [
-    { x: 260, y: 100, w: 150, h: 80 },  // 上段
-    { x: 260, y: 200, w: 150, h: 80 },  // 中段
-    { x: 260, y: 310, w: 150, h: 80 }   // 下段
+    { x: 380, y: 110 },
+    { x: 380, y: 220 },
+    { x: 380, y: 330 }
   ];
 
-  // --- ゲームの状態 ---
   let gameState = {
     money: 500,
-    cars: [null, null, null] // 3つの展示枠
+    cars: [null, null, null]
   };
 
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
-  // 画像オブジェクトの作成
-  const bgImage = new Image();
-  const carsImage = new Image();
-
-  // あなたの写真画像データを組み込み
-  bgImage.src = 'https://raw.githubusercontent.com/My-Golf-Spec-Pro/pixel-car-dealer/main/IMG_0419.webp'; 
-  // フォールバック（画像読み込み失敗時でも機能させるBase64または代替画像処理）
-  
-  // 背景画像（IMG_0419）を読み込み
-  bgImage.src = 'data:image/webp;base64,UklGRmYAAABXRUJQVlA4WAoAAAAgAAAAAQEAAQAAQUxQSA0AAAABBxAR/R8E6393I8iA/wEFACAGU3RvbXAEQUxQSA0AAAABBxAR/R8E6393I8iA/wE='; 
-  
-  // 背景と車スプライトのセットアップ
-  let imagesLoaded = 0;
-  function onImageLoad() {
-    imagesLoaded++;
-    draw();
-  }
-
-  // クロップ元の背景画像と車スプライト画像をロード
-  const bgImg = new Image();
-  bgImg.crossOrigin = "anonymous";
-  bgImg.onload = onImageLoad;
-  // 提供画像（店舗背景）
-  bgImg.src = 'https://i.ibb.co/6yC3G3x/bg-showroom.jpg'; 
-
-  const carSpriteImg = new Image();
-  carSpriteImg.crossOrigin = "anonymous";
-  carSpriteImg.onload = onImageLoad;
-  // 提供画像（車ラインナップ）
-  carSpriteImg.src = 'https://i.ibb.co/3kWyTfQ/cars-sprite.png';
-
   // --- 描画処理 ---
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 1. 背景（店舗画像）の描画
-    if (bgImg.complete && bgImg.naturalWidth !== 0) {
-      ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-    } else {
-      // 画像ロード前用のダミー背景
-      ctx.fillStyle = '#cfd8dc';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      // 展示ラグを描画
-      RUG_POSITIONS.forEach(pos => {
-        ctx.fillStyle = '#1e40af';
-        ctx.fillRect(pos.x, pos.y, pos.w, pos.h);
-      });
+    // 1. 店舗背景（タイルの床と青壁）
+    ctx.fillStyle = '#e8ecf1';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // タイル目地
+    ctx.strokeStyle = '#d0d7de';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < canvas.width; x += 30) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += 30) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
     }
 
-    // 2. 展示車の描画
+    // 周囲の壁（青ライン）
+    ctx.fillStyle = '#1d4ed8';
+    ctx.fillRect(0, 0, canvas.width, 16);
+    ctx.fillRect(0, 0, 16, canvas.height);
+    ctx.fillRect(canvas.width - 16, 0, 16, canvas.height);
+    ctx.fillRect(0, canvas.height - 16, canvas.width, 16);
+
+    // 2. 店舗内インテリア
+    // カウンターデスク (左下)
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillRect(40, 360, 180, 70);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(50, 370, 160, 20);
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(80, 335, 30, 25); // PC画面
+
+    // 応対セット (左上)
+    ctx.fillStyle = '#b45309';
+    ctx.fillRect(60, 60, 80, 50); // テーブル
+    ctx.fillStyle = '#2563eb';
+    ctx.fillRect(35, 65, 20, 40); // 椅子左
+    ctx.fillRect(145, 65, 20, 40); // 椅子右
+
+    // 商談スペース (右上)
+    ctx.fillStyle = '#1e3a8a';
+    ctx.fillRect(720, 50, 220, 130);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillRect(750, 75, 160, 50); // ソファ
+
+    // ピット作業場 (右下)
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(720, 280, 220, 180);
+    ctx.fillStyle = '#334155';
+    ctx.fillRect(730, 290, 140, 50); // 工具キャビネット
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath(); ctx.arc(900, 320, 18, 0, Math.PI * 2); ctx.fill(); // タイヤ
+
+    // 3. 青い展示マット (中央3箇所)
+    RUG_POSITIONS.forEach(pos => {
+      ctx.fillStyle = '#1d4ed8';
+      ctx.fillRect(pos.x, pos.y, 220, 90);
+      ctx.strokeStyle = '#60a5fa';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(pos.x, pos.y, 220, 90);
+    });
+
+    // 4. 展示車の描画
     gameState.cars.forEach((car, index) => {
       if (car !== null) {
-        const rug = RUG_POSITIONS[index];
-        if (carSpriteImg.complete && carSpriteImg.naturalWidth !== 0) {
-          // 画像から該当の車部分を切り抜いてラグの上に配置
-          ctx.drawImage(
-            carSpriteImg,
-            car.sx, 0, car.sw, car.sh,
-            rug.x - 10, rug.y - 20, 160, 100
-          );
-        } else {
-          // フォールバック用ドット風描画
-          ctx.fillStyle = '#ef4444';
-          ctx.fillRect(rug.x + 20, rug.y + 15, 110, 50);
-          ctx.fillStyle = '#fff';
-          ctx.font = '12px sans-serif';
-          ctx.fillText(car.name, rug.x + 30, rug.y + 45);
-        }
+        const pos = RUG_POSITIONS[index];
+        drawDetailedCar(pos.x + 35, pos.y + 10, car.type);
       }
     });
   }
 
-  // --- ゲームロジック ---
+  // ドット絵車描画エンジン（車種別の形状・カラー・パーツ再現）
+  function drawDetailedCar(x, y, type) {
+    ctx.save();
 
-  // 車の仕入れ
+    // 影
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+    ctx.beginPath();
+    ctx.ellipse(x + 70, y + 68, 75, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (type === 'compact_red') { // ミニスマイル (赤/白ツートン)
+      // ボディ
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x + 10, y + 20, 120, 40);
+      // ルーフ (赤)
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(x + 30, y + 2, 70, 22);
+      // 窓
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(x + 35, y + 6, 60, 14);
+      // ライト
+      ctx.fillStyle = '#fde047';
+      ctx.fillRect(x + 10, y + 25, 8, 12);
+    } 
+    else if (type === 'compact_blue') { // シティラン (ブルー)
+      ctx.fillStyle = '#2563eb';
+      ctx.fillRect(x + 5, y + 18, 130, 42);
+      ctx.fillStyle = '#1d4ed8';
+      ctx.fillRect(x + 30, y + 0, 75, 22);
+      ctx.fillStyle = '#7dd3fc';
+      ctx.fillRect(x + 35, y + 4, 65, 15);
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(x + 5, y + 24, 10, 10);
+    } 
+    else if (type === 'minivan_gray') { // ファミリア8 (グレーミニバン)
+      ctx.fillStyle = '#9ca3af';
+      ctx.fillRect(x + 0, y + 10, 145, 52);
+      ctx.fillStyle = '#4b5563';
+      ctx.fillRect(x + 20, y - 5, 105, 20);
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect(x + 25, y - 1, 95, 15);
+      ctx.fillStyle = '#facc15';
+      ctx.fillRect(x + 0, y + 18, 8, 18);
+    } 
+    else if (type === 'suv_red') { // ワイルドクロス (レッドSUV)
+      ctx.fillStyle = '#b91c1c';
+      ctx.fillRect(x + 5, y + 10, 135, 48);
+      ctx.fillStyle = '#991b1b';
+      ctx.fillRect(x + 25, y - 6, 85, 22);
+      // ルーフレール
+      ctx.fillStyle = '#111827';
+      ctx.fillRect(x + 25, y - 10, 85, 3);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(x + 30, y - 2, 75, 14);
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(x + 5, y + 18, 12, 14);
+    } 
+    else if (type === 'sedan_black') { // ロイヤルセダン (高級黒セダン)
+      ctx.fillStyle = '#111827';
+      ctx.fillRect(x - 5, y + 22, 155, 38);
+      ctx.fillStyle = '#1f2937';
+      ctx.fillRect(x + 25, y + 4, 90, 20);
+      ctx.fillStyle = '#0284c7';
+      ctx.fillRect(x + 35, y + 8, 70, 13);
+      // フロントメッキグリル
+      ctx.fillStyle = '#e5e7eb';
+      ctx.fillRect(x - 5, y + 26, 6, 20);
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(x - 3, y + 24, 8, 8);
+    }
+
+    // 共通パーツ: タイヤ
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(x + 20, y + 52, 24, 16);
+    ctx.fillRect(x + 95, y + 52, 24, 16);
+    // ホイールキャップ
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(x + 26, y + 57, 12, 6);
+    ctx.fillRect(x + 101, y + 57, 12, 6);
+
+    ctx.restore();
+  }
+
+  // --- ゲームロジック ---
   function buyCar(typeIndex) {
     const carData = CAR_TYPES[typeIndex];
-    
-    // 空き枠を探す
     const emptyIndex = gameState.cars.findIndex(slot => slot === null);
     
     if (emptyIndex === -1) {
-      showMessage("展示スペースが満車です！車を売却してください。");
+      showMessage("展示スペースが満車です！商談して売却してください。");
       return;
     }
     if (gameState.money < carData.cost) {
@@ -295,38 +369,33 @@
       return;
     }
 
-    // 購入処理
     gameState.money -= carData.cost;
     gameState.cars[emptyIndex] = { ...carData };
 
-    showMessage(`「${carData.name}」を${carData.cost}万円で仕入れました！ (展示枠 #${emptyIndex + 1})`);
+    showMessage(`「${carData.name}」を${carData.cost}万円で仕入れました！`);
     updateUI();
     draw();
   }
 
-  // 車の売却（商談）
   function sellCar() {
-    // 展示中の最初の車を探す
     const soldIndex = gameState.cars.findIndex(slot => slot !== null);
     if (soldIndex === -1) return;
 
     const soldCar = gameState.cars[soldIndex];
     const profit = soldCar.sell - soldCar.cost;
     gameState.money += soldCar.sell;
-    gameState.cars[soldIndex] = null; // 枠を空ける
+    gameState.cars[soldIndex] = null;
 
     showMessage(`【ご成約！】「${soldCar.name}」が${soldCar.sell}万円で売れました！ (利益 +${profit}万円)`);
     updateUI();
     draw();
   }
 
-  // UI更新
   function updateUI() {
     document.getElementById('money').innerText = gameState.money;
     const currentCarCount = gameState.cars.filter(c => c !== null).length;
     document.getElementById('car-count').innerText = currentCarCount;
 
-    // 各車仕入れボタンの有効/無効化
     CAR_TYPES.forEach((car, index) => {
       const card = document.getElementById(`car-${index}`);
       if (gameState.money < car.cost || currentCarCount >= 3) {
@@ -336,7 +405,6 @@
       }
     });
 
-    // 売却ボタンの有効/無効化
     document.getElementById('sell-btn').disabled = (currentCarCount === 0);
   }
 
@@ -344,7 +412,6 @@
     document.getElementById('message').innerText = msg;
   }
 
-  // 初期化実行
   updateUI();
   draw();
 </script>
