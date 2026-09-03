@@ -7,7 +7,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background-color: #12131a;
+      background-color: #111116;
       color: #fff;
       font-family: 'Helvetica Neue', Arial, sans-serif;
       display: flex;
@@ -18,38 +18,38 @@
     }
     #game-container {
       width: 1000px;
-      background-color: #1f222e;
-      border: 3px solid #3b4259;
-      border-radius: 10px;
+      background-color: #1a1c23;
+      border: 3px solid #323846;
+      border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.7);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
     }
     
-    /* ステータスヘッダー */
+    /* 上部ステータスバー */
     .status-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(180deg, #28334a 0%, #1a2336 100%);
+      background: #172233;
       padding: 10px 20px;
-      border-bottom: 2px solid #3b4d6b;
+      border-bottom: 2px solid #2d3b52;
       font-size: 15px;
       font-weight: bold;
     }
     .status-item {
-      background: #111827;
-      padding: 6px 14px;
+      background: #0d131f;
+      padding: 6px 16px;
       border-radius: 6px;
-      border: 1px solid #374151;
+      border: 1px solid #233044;
     }
-    .status-item span { color: #38bdf8; font-size: 17px; }
+    .status-item span { color: #38bdf8; font-size: 18px; }
 
-    /* ゲームCanvas領域 */
+    /* メインCanvas領域 */
     .canvas-wrapper {
       position: relative;
       width: 1000px;
-      height: 520px;
-      background-color: #000;
+      height: 562px;
+      background-color: #0d0e12;
     }
     canvas {
       display: block;
@@ -60,33 +60,33 @@
 
     /* ガイドメッセージ */
     .message-box {
-      background: #0f172a;
-      border-top: 2px solid #1e293b;
+      background: #0a0f1d;
+      border-top: 2px solid #1a2438;
       padding: 10px 20px;
       color: #fde047;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: bold;
       text-align: center;
-      height: 44px;
+      height: 46px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* 下部操作メニュー */
+    /* 下部操作UI */
     .control-panel {
       padding: 12px 20px;
-      background: #171923;
+      background: #12141c;
     }
     .car-selector {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .car-card {
-      background: #2d3748;
-      border: 2px solid #4a5568;
+      background: #232936;
+      border: 2px solid #3a4356;
       border-radius: 8px;
       padding: 8px 4px;
       text-align: center;
@@ -94,8 +94,8 @@
       transition: all 0.2s;
     }
     .car-card:hover:not(.disabled) {
-      background: #3b495e;
-      border-color: #6366f1;
+      background: #323d52;
+      border-color: #38bdf8;
       transform: translateY(-2px);
     }
     .car-card.disabled {
@@ -103,8 +103,8 @@
       cursor: not-allowed;
       filter: grayscale(0.8);
     }
-    .car-name { font-size: 13px; font-weight: bold; margin-bottom: 2px; color: #f3f4f6; }
-    .car-price { font-size: 11px; color: #38bdf8; font-weight: bold; }
+    .car-name { font-size: 13px; font-weight: bold; margin-bottom: 3px; color: #f3f4f6; }
+    .car-price { font-size: 12px; color: #38bdf8; font-weight: bold; }
 
     .action-buttons {
       display: flex;
@@ -112,7 +112,7 @@
     }
     button {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       font-size: 15px;
       font-weight: bold;
       color: #ffffff;
@@ -123,7 +123,7 @@
     }
     .btn-sell { background: #059669; }
     .btn-sell:hover:not(:disabled) { background: #10b981; }
-    button:disabled { background: #374151; color: #9ca3af; cursor: not-allowed; }
+    button:disabled { background: #2a303c; color: #6b7280; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -136,11 +136,11 @@
   </div>
 
   <div class="canvas-wrapper">
-    <canvas id="gameCanvas" width="1000" height="520"></canvas>
+    <canvas id="gameCanvas" width="1000" height="562"></canvas>
   </div>
 
   <div class="message-box" id="message">
-    開店しました！下の車種から好きな車を選んで展示場に並べましょう。
+    いらっしゃいませ！仕入れたい車種を選択して展示スペースに並べましょう。
   </div>
 
   <div class="control-panel">
@@ -168,26 +168,26 @@
     </div>
 
     <div class="action-buttons">
-      <button class="btn-sell" id="sell-btn" onclick="sellCar()" disabled>商談して売却する</button>
+      <button class="btn-sell" id="sell-btn" onclick="sellCar()" disabled>商談を進めて売却する</button>
     </div>
   </div>
 </div>
 
 <script>
-  // --- 5車種のデータ ---
+  // 車のマスタ定義
   const CAR_TYPES = [
-    { id: 0, name: 'ミニスマイル', cost: 80, sell: 110, type: 'compact_red' },
-    { id: 1, name: 'シティラン', cost: 100, sell: 140, type: 'compact_blue' },
-    { id: 2, name: 'ファミリア8', cost: 220, sell: 290, type: 'minivan_gray' },
-    { id: 3, name: 'ワイルドクロス', cost: 250, sell: 330, type: 'suv_red' },
-    { id: 4, name: 'ロイヤルセダン', cost: 350, sell: 460, type: 'sedan_black' }
+    { id: 0, name: 'ミニスマイル', cost: 80, sell: 110 },
+    { id: 1, name: 'シティラン', cost: 100, sell: 140 },
+    { id: 2, name: 'ファミリア8', cost: 220, sell: 290 },
+    { id: 3, name: 'ワイルドクロス', cost: 250, sell: 330 },
+    { id: 4, name: 'ロイヤルセダン', cost: 350, sell: 460 }
   ];
 
-  // 展示用ラグの座標
+  // 3か所の青ラグ展示位置
   const RUG_POSITIONS = [
-    { x: 380, y: 110 },
-    { x: 380, y: 220 },
-    { x: 380, y: 330 }
+    { x: 382, y: 125, w: 195, h: 80 }, // 上段
+    { x: 382, y: 235, w: 195, h: 80 }, // 中段
+    { x: 382, y: 345, w: 195, h: 80 }  // 下段
   ];
 
   let gameState = {
@@ -198,170 +198,180 @@
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
-  // --- 描画処理 ---
+  // SVGベースの高画質・正確ドット絵レンダリングシステム
+  const bgSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="562" viewBox="0 0 1000 562">
+    <!-- 床タイル -->
+    <rect width="1000" height="562" fill="#e2e8f0"/>
+    <path d="M0,0 L1000,562 M0,50 L1000,612 M0,-50 L1000,512" stroke="#cbd5e1" stroke-width="1" opacity="0.5"/>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#cbd5e1" stroke-width="1"/>
+    </pattern>
+    <rect width="1000" height="562" fill="url(#grid)"/>
+
+    <!-- 外壁 & フレーム -->
+    <rect x="0" y="0" width="1000" height="562" fill="none" stroke="#1e40af" stroke-width="14"/>
+    <rect x="0" y="0" width="1000" height="30" fill="#2563eb"/>
+    <rect x="0" y="532" width="1000" height="30" fill="#1e3a8a"/>
+
+    <!-- 受付カウンター (左下) -->
+    <g transform="translate(60, 310)">
+      <path d="M 0,60 A 60,60 0 0,1 60,0 L 150,0 A 20,20 0 0,1 170,20 L 170,80 L 0,80 Z" fill="#2563eb" stroke="#1d4ed8" stroke-width="3"/>
+      <path d="M 10,50 A 50,50 0 0,1 60,10 L 140,10 L 160,30 L 160,70 L 10,70 Z" fill="#ffffff"/>
+      <!-- パソコン -->
+      <rect x="80" y="15" width="35" height="25" rx="3" fill="#1e293b"/>
+      <rect x="85" y="20" width="25" height="15" fill="#38bdf8"/>
+      <rect x="92" y="40" width="12" height="5" fill="#64748b"/>
+    </g>
+
+    <!-- 商談ブース (左上) -->
+    <g transform="translate(70, 50)">
+      <rect x="0" y="0" width="120" height="70" rx="6" fill="#d97706" stroke="#b45309" stroke-width="3"/>
+      <rect x="-25" y="10" width="20" height="50" rx="4" fill="#2563eb"/>
+      <rect x="125" y="10" width="20" height="50" rx="4" fill="#2563eb"/>
+    </g>
+
+    <!-- ウェイティングラウンジ & キッズコーナー (右上) -->
+    <g transform="translate(730, 40)">
+      <rect x="0" y="0" width="230" height="150" fill="#1e3a8a" opacity="0.15" rx="8"/>
+      <!-- ソファ -->
+      <rect x="20" y="15" width="180" height="45" rx="8" fill="#d97706"/>
+      <rect x="20" y="15" width="180" height="15" rx="4" fill="#f59e0b"/>
+      <!-- テーブル -->
+      <rect x="50" y="70" width="120" height="35" rx="4" fill="#b45309"/>
+      <!-- キッズマット -->
+      <rect x="20" y="115" width="190" height="30" fill="#fbcfe8"/>
+    </g>
+
+    <!-- ピット作業場 (右下) -->
+    <g transform="translate(720, 260)">
+      <rect x="0" y="0" width="240" height="250" fill="none" stroke="#64748b" stroke-width="4" stroke-dasharray="8,8"/>
+      <!-- ガラス仕切り -->
+      <rect x="0" y="0" width="240" height="250" fill="#93c5fd" opacity="0.15"/>
+      <!-- 工具キャビネット -->
+      <rect x="30" y="130" width="140" height="90" rx="4" fill="#1d4ed8"/>
+      <rect x="35" y="135" width="130" height="20" fill="#3b82f6"/>
+      <rect x="35" y="160" width="130" height="20" fill="#3b82f6"/>
+      <rect x="35" y="185" width="130" height="20" fill="#3b82f6"/>
+      <!-- タイヤラック -->
+      <rect x="185" y="100" width="45" height="130" fill="#334155"/>
+      <circle cx="207" cy="125" r="18" fill="#0f172a" stroke="#475569" stroke-width="6"/>
+      <circle cx="207" cy="165" r="18" fill="#0f172a" stroke="#475569" stroke-width="6"/>
+      <circle cx="207" cy="205" r="18" fill="#0f172a" stroke="#475569" stroke-width="6"/>
+    </g>
+
+    <!-- 中央展示青ラグ 3箇所 -->
+    <g>
+      <rect x="382" y="125" width="195" height="80" rx="4" fill="#1d4ed8" stroke="#60a5fa" stroke-width="3"/>
+      <rect x="382" y="235" width="195" height="80" rx="4" fill="#1d4ed8" stroke="#60a5fa" stroke-width="3"/>
+      <rect x="382" y="345" width="195" height="80" rx="4" fill="#1d4ed8" stroke="#60a5fa" stroke-width="3"/>
+    </g>
+  </svg>`;
+
+  // 5車種それぞれの実車ドット絵SVGデータ
+  const CAR_SVGS = [
+    // 0: ミニスマイル (赤/白ツートン軽自動車)
+    `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="90" viewBox="0 0 180 90">
+      <ellipse cx="90" cy="78" rx="75" ry="10" fill="rgba(0,0,0,0.3)"/>
+      <path d="M 20,40 L 40,15 L 120,15 L 155,40 L 165,52 L 165,70 L 15,70 L 15,52 Z" fill="#f8fafc"/>
+      <path d="M 40,15 L 120,15 L 130,40 L 30,40 Z" fill="#ef4444"/>
+      <path d="M 45,20 L 75,20 L 75,37 L 35,37 Z" fill="#38bdf8"/>
+      <path d="M 82,20 L 115,20 L 125,37 L 82,37 Z" fill="#38bdf8"/>
+      <circle cx="22" cy="48" r="9" fill="#fde047" stroke="#e2e8f0" stroke-width="2"/>
+      <rect x="10" y="55" width="12" height="8" fill="#facc15" rx="2"/>
+      <circle cx="45" cy="70" r="14" fill="#0f172a"/><circle cx="45" cy="70" r="6" fill="#94a3b8"/>
+      <circle cx="135" cy="70" r="14" fill="#0f172a"/><circle cx="135" cy="70" r="6" fill="#94a3b8"/>
+    </svg>`,
+
+    // 1: シティラン (ブルーコンパクトカー)
+    `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="90" viewBox="0 0 180 90">
+      <ellipse cx="90" cy="78" rx="75" ry="10" fill="rgba(0,0,0,0.3)"/>
+      <path d="M 15,42 L 45,18 L 115,18 L 158,42 L 168,52 L 168,70 L 10,70 L 10,52 Z" fill="#2563eb"/>
+      <path d="M 48,22 L 75,22 L 75,39 L 38,39 Z" fill="#60a5fa"/>
+      <path d="M 82,22 L 110,22 L 122,39 L 82,39 Z" fill="#60a5fa"/>
+      <polygon points="12,48 28,45 28,55 12,55" fill="#fef08a"/>
+      <circle cx="42" cy="70" r="14" fill="#0f172a"/><circle cx="42" cy="70" r="6" fill="#cbd5e1"/>
+      <circle cx="138" cy="70" r="14" fill="#0f172a"/><circle cx="138" cy="70" r="6" fill="#cbd5e1"/>
+    </svg>`,
+
+    // 2: ファミリア8 (シルバーミニバン)
+    `<svg xmlns="http://www.w3.org/2000/svg" width="190" height="95" viewBox="0 0 190 95">
+      <ellipse cx="95" cy="83" rx="80" ry="10" fill="rgba(0,0,0,0.3)"/>
+      <path d="M 10,38 L 35,10 L 145,10 L 175,38 L 180,50 L 180,75 L 5,75 L 5,50 Z" fill="#94a3b8"/>
+      <rect x="40" y="15" width="30" height="22" fill="#0284c7" rx="2"/>
+      <rect x="75" y="15" width="35" height="22" fill="#0284c7" rx="2"/>
+      <rect x="115" y="15" width="30" height="22" fill="#0284c7" rx="2"/>
+      <path d="M 170,42 L 180,42 L 180,55 L 170,52 Z" fill="#fef08a"/>
+      <circle cx="40" cy="75" r="15" fill="#0f172a"/><circle cx="40" cy="75" r="6" fill="#e2e8f0"/>
+      <circle cx="145" cy="75" r="15" fill="#0f172a"/><circle cx="145" cy="75" r="6" fill="#e2e8f0"/>
+    </svg>`,
+
+    // 3: ワイルドクロス (レッドSUV)
+    `<svg xmlns="http://www.w3.org/2000/svg" width="185" height="95" viewBox="0 0 185 95">
+      <ellipse cx="92" cy="83" rx="78" ry="10" fill="rgba(0,0,0,0.3)"/>
+      <!-- ルーフレール -->
+      <rect x="35" y="8" width="100" height="4" fill="#1e293b"/>
+      <path d="M 12,42 L 35,15 L 130,15 L 165,42 L 172,50 L 172,72 L 8,72 Z" fill="#dc2626"/>
+      <rect x="10" y="58" width="162" height="14" fill="#1e293b"/>
+      <path d="M 40,20 L 75,20 L 75,38 L 32,38 Z" fill="#7dd3fc"/>
+      <path d="M 82,20 L 122,20 L 132,38 L 82,38 Z" fill="#7dd3fc"/>
+      <rect x="160" y="45" width="10" height="12" fill="#fef08a" rx="2"/>
+      <circle cx="42" cy="72" r="16" fill="#0f172a"/><circle cx="42" cy="72" r="7" fill="#94a3b8"/>
+      <circle cx="138" cy="72" r="16" fill="#0f172a"/><circle cx="138" cy="72" r="7" fill="#94a3b8"/>
+    </svg>`,
+
+    // 4: ロイヤルセダン (高級ブラックセダン)
+    `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="90" viewBox="0 0 200 90">
+      <ellipse cx="100" cy="78" rx="85" ry="10" fill="rgba(0,0,0,0.3)"/>
+      <path d="M 8,45 L 45,22 L 135,22 L 180,45 L 192,52 L 192,70 L 5,70 L 5,52 Z" fill="#0f172a"/>
+      <path d="M 50,26 L 85,26 L 85,41 L 40,41 Z" fill="#38bdf8"/>
+      <path d="M 92,26 L 128,26 L 142,41 L 92,41 Z" fill="#38bdf8"/>
+      <!-- フロント縦格子メッキグリル -->
+      <rect x="180" y="48" width="8" height="16" fill="#e2e8f0"/>
+      <line x1="182" y1="48" x2="182" y2="64" stroke="#475569" stroke-width="1"/>
+      <line x1="185" y1="48" x2="185" y2="64" stroke="#475569" stroke-width="1"/>
+      <polygon points="172,46 182,46 182,54 172,52" fill="#fef08a"/>
+      <circle cx="45" cy="70" r="14" fill="#1e293b"/><circle cx="45" cy="70" r="6" fill="#e2e8f0"/>
+      <circle cx="150" cy="70" r="14" fill="#1e293b"/><circle cx="150" cy="70" r="6" fill="#e2e8f0"/>
+    </svg>`
+  ];
+
+  // 画像要素の準備
+  const bgImg = new Image();
+  bgImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(bgSVG);
+
+  const carImgs = CAR_SVGS.map(svg => {
+    const img = new Image();
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    return img;
+  });
+
+  bgImg.onload = () => draw();
+
+  // --- 描画メイン処理 ---
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 1. 店舗背景を描画
+    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
-    // 1. 店舗背景（タイルの床と青壁）
-    ctx.fillStyle = '#e8ecf1';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // タイル目地
-    ctx.strokeStyle = '#d0d7de';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < canvas.width; x += 30) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-    }
-    for (let y = 0; y < canvas.height; y += 30) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-    }
-
-    // 周囲の壁（青ライン）
-    ctx.fillStyle = '#1d4ed8';
-    ctx.fillRect(0, 0, canvas.width, 16);
-    ctx.fillRect(0, 0, 16, canvas.height);
-    ctx.fillRect(canvas.width - 16, 0, 16, canvas.height);
-    ctx.fillRect(0, canvas.height - 16, canvas.width, 16);
-
-    // 2. 店舗内インテリア
-    // カウンターデスク (左下)
-    ctx.fillStyle = '#3b82f6';
-    ctx.fillRect(40, 360, 180, 70);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(50, 370, 160, 20);
-    ctx.fillStyle = '#1e293b';
-    ctx.fillRect(80, 335, 30, 25); // PC画面
-
-    // 応対セット (左上)
-    ctx.fillStyle = '#b45309';
-    ctx.fillRect(60, 60, 80, 50); // テーブル
-    ctx.fillStyle = '#2563eb';
-    ctx.fillRect(35, 65, 20, 40); // 椅子左
-    ctx.fillRect(145, 65, 20, 40); // 椅子右
-
-    // 商談スペース (右上)
-    ctx.fillStyle = '#1e3a8a';
-    ctx.fillRect(720, 50, 220, 130);
-    ctx.fillStyle = '#f59e0b';
-    ctx.fillRect(750, 75, 160, 50); // ソファ
-
-    // ピット作業場 (右下)
-    ctx.strokeStyle = '#94a3b8';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(720, 280, 220, 180);
-    ctx.fillStyle = '#334155';
-    ctx.fillRect(730, 290, 140, 50); // 工具キャビネット
-    ctx.fillStyle = '#0f172a';
-    ctx.beginPath(); ctx.arc(900, 320, 18, 0, Math.PI * 2); ctx.fill(); // タイヤ
-
-    // 3. 青い展示マット (中央3箇所)
-    RUG_POSITIONS.forEach(pos => {
-      ctx.fillStyle = '#1d4ed8';
-      ctx.fillRect(pos.x, pos.y, 220, 90);
-      ctx.strokeStyle = '#60a5fa';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(pos.x, pos.y, 220, 90);
-    });
-
-    // 4. 展示車の描画
+    // 2. 展示車を描画
     gameState.cars.forEach((car, index) => {
       if (car !== null) {
-        const pos = RUG_POSITIONS[index];
-        drawDetailedCar(pos.x + 35, pos.y + 10, car.type);
+        const rug = RUG_POSITIONS[index];
+        const carImg = carImgs[car.id];
+        // 青ラグの上に車を正確に配置
+        ctx.drawImage(carImg, rug.x + 8, rug.y - 12, 180, 90);
       }
     });
   }
 
-  // ドット絵車描画エンジン（車種別の形状・カラー・パーツ再現）
-  function drawDetailedCar(x, y, type) {
-    ctx.save();
-
-    // 影
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-    ctx.beginPath();
-    ctx.ellipse(x + 70, y + 68, 75, 12, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    if (type === 'compact_red') { // ミニスマイル (赤/白ツートン)
-      // ボディ
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(x + 10, y + 20, 120, 40);
-      // ルーフ (赤)
-      ctx.fillStyle = '#dc2626';
-      ctx.fillRect(x + 30, y + 2, 70, 22);
-      // 窓
-      ctx.fillStyle = '#38bdf8';
-      ctx.fillRect(x + 35, y + 6, 60, 14);
-      // ライト
-      ctx.fillStyle = '#fde047';
-      ctx.fillRect(x + 10, y + 25, 8, 12);
-    } 
-    else if (type === 'compact_blue') { // シティラン (ブルー)
-      ctx.fillStyle = '#2563eb';
-      ctx.fillRect(x + 5, y + 18, 130, 42);
-      ctx.fillStyle = '#1d4ed8';
-      ctx.fillRect(x + 30, y + 0, 75, 22);
-      ctx.fillStyle = '#7dd3fc';
-      ctx.fillRect(x + 35, y + 4, 65, 15);
-      ctx.fillStyle = '#fef08a';
-      ctx.fillRect(x + 5, y + 24, 10, 10);
-    } 
-    else if (type === 'minivan_gray') { // ファミリア8 (グレーミニバン)
-      ctx.fillStyle = '#9ca3af';
-      ctx.fillRect(x + 0, y + 10, 145, 52);
-      ctx.fillStyle = '#4b5563';
-      ctx.fillRect(x + 20, y - 5, 105, 20);
-      ctx.fillStyle = '#0284c7';
-      ctx.fillRect(x + 25, y - 1, 95, 15);
-      ctx.fillStyle = '#facc15';
-      ctx.fillRect(x + 0, y + 18, 8, 18);
-    } 
-    else if (type === 'suv_red') { // ワイルドクロス (レッドSUV)
-      ctx.fillStyle = '#b91c1c';
-      ctx.fillRect(x + 5, y + 10, 135, 48);
-      ctx.fillStyle = '#991b1b';
-      ctx.fillRect(x + 25, y - 6, 85, 22);
-      // ルーフレール
-      ctx.fillStyle = '#111827';
-      ctx.fillRect(x + 25, y - 10, 85, 3);
-      ctx.fillStyle = '#38bdf8';
-      ctx.fillRect(x + 30, y - 2, 75, 14);
-      ctx.fillStyle = '#fef08a';
-      ctx.fillRect(x + 5, y + 18, 12, 14);
-    } 
-    else if (type === 'sedan_black') { // ロイヤルセダン (高級黒セダン)
-      ctx.fillStyle = '#111827';
-      ctx.fillRect(x - 5, y + 22, 155, 38);
-      ctx.fillStyle = '#1f2937';
-      ctx.fillRect(x + 25, y + 4, 90, 20);
-      ctx.fillStyle = '#0284c7';
-      ctx.fillRect(x + 35, y + 8, 70, 13);
-      // フロントメッキグリル
-      ctx.fillStyle = '#e5e7eb';
-      ctx.fillRect(x - 5, y + 26, 6, 20);
-      ctx.fillStyle = '#fef08a';
-      ctx.fillRect(x - 3, y + 24, 8, 8);
-    }
-
-    // 共通パーツ: タイヤ
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(x + 20, y + 52, 24, 16);
-    ctx.fillRect(x + 95, y + 52, 24, 16);
-    // ホイールキャップ
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillRect(x + 26, y + 57, 12, 6);
-    ctx.fillRect(x + 101, y + 57, 12, 6);
-
-    ctx.restore();
-  }
-
-  // --- ゲームロジック ---
+  // --- ゲーム機能 ---
   function buyCar(typeIndex) {
     const carData = CAR_TYPES[typeIndex];
     const emptyIndex = gameState.cars.findIndex(slot => slot === null);
     
     if (emptyIndex === -1) {
-      showMessage("展示スペースが満車です！商談して売却してください。");
+      showMessage("展示スペースが満車です！商談して車を売却してください。");
       return;
     }
     if (gameState.money < carData.cost) {
