@@ -5,866 +5,943 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>クルマ屋経営シミュレーター</title>
 <style>
-:root{
-    --bg:#07111f;
-    --panel:#101d2e;
-    --panel2:#16263a;
-    --border:#263b55;
-    --blue:#38bdf8;
-    --green:#22c55e;
-    --gold:#fbbf24;
-    --white:#f8fafc;
-    --muted:#94a3b8;
-}
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",sans-serif;
 }
+:root{
+    --bg:#07101d;
+    --panel:#101c2b;
+    --panel2:#162638;
+    --border:#30445b;
+    --blue:#38bdf8;
+    --green:#22c55e;
+    --gold:#fbbf24;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+}
+html,
 body{
-    min-height:100vh;
-    background:
-        radial-gradient(circle at 70% 30%,#17345a 0%,#091322 45%,#040912 100%);
-    color:var(--white);
-    padding:14px;
-}
-#game-container{
     width:100%;
-    max-width:1250px;
-    margin:auto;
-    background:#0b1625;
-    border:1px solid #263b55;
-    border-radius:18px;
+    height:100%;
     overflow:hidden;
-    box-shadow:0 25px 70px rgba(0,0,0,.65);
 }
-/* =========================
+body{
+    background:
+        radial-gradient(circle at 50% 35%,#203c5d,#08111f 70%);
+    color:var(--text);
+}
+/* =========================================================
+   GAME
+========================================================= */
+#game-container{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    background:#0a1524;
+}
+/* =========================================================
    HEADER
-========================= */
-.status-bar{
-    min-height:72px;
+========================================================= */
+.header{
+    height:64px;
+    flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:14px 22px;
-    background:linear-gradient(180deg,#17283c,#101d2e);
+    padding:0 18px;
+    background:linear-gradient(180deg,#17283c,#101d2d);
     border-bottom:1px solid var(--border);
 }
-.shop-title{
-    font-size:1.25rem;
+.logo{
+    font-size:1.2rem;
     font-weight:900;
     letter-spacing:.5px;
 }
-.status-items{
+.header-right{
     display:flex;
-    gap:10px;
+    gap:9px;
 }
-.status-badge{
-    background:#0a1524;
-    border:1px solid #344b66;
-    padding:9px 15px;
-    border-radius:10px;
-    font-size:.9rem;
+.status{
+    background:#091422;
+    border:1px solid #344a62;
+    border-radius:9px;
+    padding:7px 12px;
+    font-size:.82rem;
     font-weight:700;
 }
-.status-badge .val{
+.status strong{
     color:var(--gold);
-    font-size:1.05rem;
-}
-/* =========================
-   MAIN
-========================= */
-.main-layout{
-    display:grid;
-    grid-template-columns:330px 1fr;
-    min-height:620px;
-}
-/* =========================
-   LEFT PANEL
-========================= */
-.left-panel{
-    padding:18px;
-    background:linear-gradient(180deg,#101d2e,#0b1625);
-    border-right:1px solid var(--border);
-}
-.panel-title{
-    font-size:.85rem;
-    color:#94a3b8;
-    font-weight:800;
-    letter-spacing:1px;
-    margin-bottom:12px;
-}
-.area-card{
-    background:linear-gradient(145deg,#17283c,#101d2e);
-    border:1px solid #30465f;
-    border-radius:13px;
-    padding:14px;
-    margin-bottom:10px;
-    box-shadow:0 6px 18px rgba(0,0,0,.2);
-}
-.area-card.active{
-    border-color:#38bdf8;
-    box-shadow:0 0 0 1px rgba(56,189,248,.15);
-}
-.area-card.service{
-    border-left:4px solid #22c55e;
-}
-.area-card.sales{
-    border-left:4px solid #818cf8;
-}
-.area-card.reception{
-    border-left:4px solid #38bdf8;
-}
-.area-card.lounge{
-    border-left:4px solid #f59e0b;
-}
-.area-header{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    font-weight:800;
     font-size:.95rem;
-    margin-bottom:7px;
 }
-.area-icon{
-    width:34px;
-    height:34px;
-    border-radius:9px;
+/* =========================================================
+   MESSAGE
+========================================================= */
+.message{
+    height:36px;
+    flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#0a1625;
-    font-size:1.2rem;
-}
-.area-description{
-    color:#94a3b8;
-    font-size:.76rem;
-    line-height:1.5;
-}
-.left-divider{
-    height:1px;
-    background:#263b55;
-    margin:18px 0;
-}
-/* =========================
-   MARKET
-========================= */
-.market-title{
-    font-size:.82rem;
-    color:#94a3b8;
+    background:linear-gradient(90deg,#075985,#0284c7);
+    font-size:.78rem;
     font-weight:800;
-    margin-bottom:9px;
 }
-.market-card{
+/* =========================================================
+   THREE COLUMN MAIN
+========================================================= */
+.main{
+    flex:1;
+    min-height:0;
+    display:grid;
+    grid-template-columns:
+        minmax(220px,250px)
+        minmax(0,1fr)
+        minmax(220px,250px);
+    gap:10px;
+    padding:10px;
+    overflow:hidden;
+}
+/* =========================================================
+   COMMON PANEL
+========================================================= */
+.side{
+    min-width:0;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    overflow:hidden;
+}
+.section-title{
+    font-size:.72rem;
+    font-weight:900;
+    letter-spacing:1px;
+    color:#94a3b8;
+    height:22px;
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    background:#142337;
-    border:1px solid #2b4058;
-    border-radius:9px;
-    padding:9px 10px;
-    margin-bottom:7px;
-    cursor:pointer;
-    transition:.2s;
 }
-.market-card:hover:not(.disabled){
-    border-color:#38bdf8;
-    background:#1a3048;
-    transform:translateX(3px);
-}
-.market-card.disabled{
-    opacity:.35;
-    cursor:not-allowed;
-}
-.m-car-name{
-    font-size:.8rem;
-    font-weight:800;
-}
-.m-car-price{
-    font-size:.75rem;
-    color:#38bdf8;
-    font-weight:800;
-}
-.sell-button{
-    width:100%;
-    border:0;
+/* =========================================================
+   LEFT CARDS
+========================================================= */
+.info-card{
+    background:
+        linear-gradient(145deg,#17283b,#101d2c);
+    border:1px solid var(--border);
     border-radius:10px;
-    padding:13px;
-    margin-top:8px;
-    background:linear-gradient(90deg,#16a34a,#22c55e);
-    color:white;
-    font-size:.9rem;
+    padding:10px;
+    flex-shrink:0;
+}
+.info-card.blue{
+    border-left:4px solid #38bdf8;
+}
+.info-card.purple{
+    border-left:4px solid #818cf8;
+}
+.info-card.gold{
+    border-left:4px solid #f59e0b;
+}
+.info-card.green{
+    border-left:4px solid #22c55e;
+}
+.card-title{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:.82rem;
     font-weight:900;
-    cursor:pointer;
-    box-shadow:0 6px 18px rgba(34,197,94,.25);
+    margin-bottom:4px;
 }
-.sell-button:disabled{
-    background:#263548;
-    color:#64748b;
-    box-shadow:none;
-    cursor:not-allowed;
+.card-icon{
+    width:27px;
+    height:27px;
+    border-radius:7px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#091522;
+    font-size:.95rem;
 }
-/* =========================
-   RIGHT SHOWROOM
-========================= */
-.showroom{
+.card-text{
+    color:#94a3b8;
+    font-size:.68rem;
+    line-height:1.35;
+}
+/* =========================================================
+   MINI STATS
+========================================================= */
+.stats-card{
+    background:#101e2e;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px;
+}
+.stat-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:.7rem;
+    padding:4px 0;
+    border-bottom:1px solid rgba(148,163,184,.1);
+}
+.stat-row:last-child{
+    border-bottom:0;
+}
+.stat-value{
+    color:var(--gold);
+    font-weight:900;
+}
+/* =========================================================
+   CENTER SHOWROOM
+========================================================= */
+.center{
     position:relative;
     min-width:0;
+    min-height:0;
     overflow:hidden;
+    border:1px solid #38516d;
+    border-radius:13px;
     background:
         linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
         linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
-        radial-gradient(circle at 55% 35%,#294d75 0%,#142942 38%,#0b1727 80%);
-    background-size:40px 40px,40px 40px,100% 100%;
+        radial-gradient(
+            ellipse at 50% 35%,
+            #2a4b70 0%,
+            #172d47 42%,
+            #0b1625 85%
+        );
+    background-size:
+        35px 35px,
+        35px 35px,
+        100% 100%;
 }
-/* 天井照明 */
-.ceiling-light{
+/* showroom title */
+.showroom-title{
     position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:95px;
-    background:linear-gradient(180deg,rgba(255,255,255,.12),transparent);
-    pointer-events:none;
+    left:14px;
+    top:11px;
+    z-index:10;
 }
-.ceiling-light::before,
-.ceiling-light::after{
-    content:"";
-    position:absolute;
-    top:23px;
-    width:32%;
-    height:5px;
-    border-radius:10px;
-    background:#e0f2fe;
-    box-shadow:0 0 25px 10px rgba(186,230,253,.28);
-}
-.ceiling-light::before{
-    left:10%;
-}
-.ceiling-light::after{
-    right:10%;
-}
-/* showroom header */
-.showroom-header{
-    position:relative;
-    z-index:2;
-    padding:18px 22px 10px;
-}
-.showroom-header h2{
-    font-size:1.15rem;
+.showroom-title h1{
+    font-size:1rem;
     font-weight:900;
 }
-.showroom-header p{
+.showroom-title p{
+    margin-top:2px;
     color:#94a3b8;
-    font-size:.75rem;
-    margin-top:4px;
+    font-size:.63rem;
 }
-/* =========================
-   FLOOR
-========================= */
-.floor{
+/* =========================================================
+   LIGHTS
+========================================================= */
+.light{
+    position:absolute;
+    top:0;
+    width:23%;
+    height:7px;
+    background:#e0f2fe;
+    border-radius:10px;
+    box-shadow:
+        0 0 18px 7px rgba(186,230,253,.35);
+}
+.light.one{
+    left:12%;
+}
+.light.two{
+    right:12%;
+}
+/* =========================================================
+   SHOWROOM FLOOR
+========================================================= */
+.showroom-floor{
     position:absolute;
     left:0;
     right:0;
-    bottom:0;
-    height:43%;
+    bottom:-4%;
+    height:52%;
     background:
-        linear-gradient(135deg,#1e293b,#111c2b);
-    border-top:2px solid rgba(148,163,184,.2);
-    transform:perspective(700px) rotateX(48deg);
+        linear-gradient(
+            135deg,
+            #29384a,
+            #121c2b
+        );
+    transform:
+        perspective(600px)
+        rotateX(45deg);
     transform-origin:bottom;
-    opacity:.95;
 }
-/* =========================
-   CARS
-========================= */
-.display-area{
-    position:relative;
-    z-index:3;
-    padding:5px 22px;
+/* =========================================================
+   CAR DISPLAY
+========================================================= */
+.car-display{
+    position:absolute;
+    left:12px;
+    right:12px;
+    top:72px;
+    bottom:115px;
+    z-index:5;
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:14px;
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+    gap:8px;
 }
 .car-slot{
-    min-height:205px;
-    border:1px solid rgba(148,163,184,.25);
-    border-radius:15px;
-    background:linear-gradient(180deg,rgba(15,23,42,.45),rgba(15,23,42,.75));
+    min-width:0;
+    border-radius:11px;
+    border:1px solid rgba(148,163,184,.22);
+    background:
+        linear-gradient(
+            180deg,
+            rgba(15,23,42,.35),
+            rgba(15,23,42,.72)
+        );
     display:flex;
     align-items:center;
     justify-content:center;
-    position:relative;
     overflow:hidden;
+    position:relative;
 }
 .car-slot.filled{
     border-color:#38bdf8;
     box-shadow:
         0 0 20px rgba(56,189,248,.12),
-        inset 0 0 30px rgba(56,189,248,.04);
+        inset 0 0 25px rgba(56,189,248,.05);
 }
-.empty-slot{
+/* empty */
+.empty{
     text-align:center;
     color:#64748b;
 }
-.empty-slot .big{
-    font-size:2.2rem;
-    margin-bottom:8px;
+.empty-icon{
+    font-size:2rem;
     opacity:.5;
 }
-.empty-slot div:last-child{
-    font-size:.75rem;
+.empty-text{
+    font-size:.62rem;
+    margin-top:4px;
 }
-.car-display-card{
+/* car */
+.car-card{
     width:100%;
     height:100%;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    padding:10px;
+    padding:5px;
 }
-.car-img-svg{
+.car-svg{
     width:100%;
-    max-width:270px;
-    height:125px;
+    height:58%;
     display:flex;
     align-items:center;
     justify-content:center;
 }
-.car-img-svg svg{
+.car-svg svg{
     width:100%;
     height:100%;
-    overflow:visible;
-    filter:drop-shadow(0 15px 12px rgba(0,0,0,.45));
+    filter:
+        drop-shadow(
+            0 10px 8px rgba(0,0,0,.5)
+        );
 }
-.car-info{
-    text-align:center;
-}
-.car-info .title{
-    font-size:.95rem;
+.car-name{
+    font-size:.72rem;
     font-weight:900;
 }
-.car-info .price{
-    margin-top:4px;
+.car-price{
+    font-size:.58rem;
     color:#38bdf8;
-    font-size:.75rem;
     font-weight:800;
+    margin-top:2px;
 }
-/* =========================
-   SHOPROOM OBJECTS
-========================= */
-.scene-row{
+/* =========================================================
+   CENTER STORE SCENES
+========================================================= */
+.scene-area{
     position:absolute;
-    left:22px;
-    right:22px;
-    bottom:35px;
-    z-index:4;
+    left:12px;
+    right:12px;
+    bottom:12px;
+    z-index:7;
+    height:92px;
     display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:18px;
-    pointer-events:none;
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+    gap:7px;
 }
-.scene-box{
-    min-height:120px;
-    border-radius:15px;
-    background:linear-gradient(145deg,rgba(15,23,42,.78),rgba(30,41,59,.55));
-    border:1px solid rgba(148,163,184,.2);
-    padding:12px;
-    backdrop-filter:blur(8px);
+.scene{
+    min-width:0;
+    border-radius:9px;
+    background:
+        rgba(8,18,31,.72);
+    border:1px solid rgba(148,163,184,.18);
+    padding:5px;
+    backdrop-filter:blur(5px);
 }
 .scene-title{
-    font-size:.72rem;
+    font-size:.56rem;
     color:#cbd5e1;
-    font-weight:800;
-    margin-bottom:4px;
+    font-weight:900;
+    margin-bottom:1px;
 }
-/* =========================
-   SVG OBJECTS
-========================= */
-.scene-svg{
+.scene svg{
     width:100%;
-    height:85px;
+    height:70px;
 }
-.scene-svg svg{
+/* =========================================================
+   RIGHT MARKET
+========================================================= */
+.market-list{
+    min-height:0;
+    overflow:hidden;
+}
+.market{
+    background:#122235;
+    border:1px solid #2b4057;
+    border-radius:8px;
+    padding:7px 8px;
+    margin-bottom:6px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+    transition:.15s;
+}
+.market:hover:not(.disabled){
+    border-color:#38bdf8;
+    transform:translateX(-2px);
+    background:#18304a;
+}
+.market.disabled{
+    opacity:.35;
+    cursor:not-allowed;
+}
+.market-name{
+    font-size:.7rem;
+    font-weight:900;
+}
+.market-price{
+    color:#38bdf8;
+    font-size:.65rem;
+    font-weight:900;
+}
+/* =========================================================
+   SELL
+========================================================= */
+.sell-button{
+    flex-shrink:0;
     width:100%;
-    height:100%;
+    padding:10px;
+    border:0;
+    border-radius:9px;
+    background:
+        linear-gradient(90deg,#15803d,#22c55e);
+    color:white;
+    font-size:.76rem;
+    font-weight:900;
+    cursor:pointer;
 }
-/* =========================
-   MESSAGE
-========================= */
-.message-banner{
-    padding:12px 18px;
-    text-align:center;
-    background:linear-gradient(90deg,#0369a1,#0284c7);
-    font-weight:800;
-    font-size:.85rem;
+.sell-button:disabled{
+    background:#263548;
+    color:#64748b;
+    cursor:not-allowed;
 }
-/* =========================
+/* =========================================================
+   SERVICE CARD
+========================================================= */
+.service-box{
+    background:
+        linear-gradient(
+            145deg,
+            #123125,
+            #10251e
+        );
+    border:1px solid #235a43;
+    border-radius:10px;
+    padding:10px;
+    margin-top:auto;
+}
+.service-title{
+    font-size:.78rem;
+    font-weight:900;
+    margin-bottom:5px;
+}
+.service-text{
+    font-size:.65rem;
+    color:#86efac;
+    line-height:1.4;
+}
+/* =========================================================
    RESPONSIVE
-========================= */
-@media(max-width:900px){
-    .main-layout{
-        grid-template-columns:1fr;
+========================================================= */
+@media(max-width:850px){
+    .main{
+        grid-template-columns:
+            190px
+            minmax(0,1fr)
+            190px;
+        gap:6px;
+        padding:6px;
     }
-    .left-panel{
-        border-right:0;
-        border-bottom:1px solid var(--border);
+    .card-text{
+        font-size:.6rem;
     }
-    .area-card{
-        display:inline-block;
-        width:calc(50% - 7px);
-        vertical-align:top;
-        margin-right:7px;
+    .logo{
+        font-size:1rem;
     }
-    .market-card{
-        width:calc(50% - 5px);
-        display:inline-flex;
-        margin-right:5px;
-    }
-    .showroom{
-        min-height:620px;
+    .status{
+        font-size:.7rem;
+        padding:6px 8px;
     }
 }
-@media(max-width:600px){
+/* =========================================================
+   PORTRAIT
+========================================================= */
+@media(max-width:650px){
+    html,
     body{
-        padding:0;
+        overflow:auto;
     }
     #game-container{
-        border-radius:0;
+        height:auto;
         min-height:100vh;
     }
-    .status-bar{
-        align-items:flex-start;
+    .header{
+        height:auto;
+        min-height:58px;
+        padding:8px;
+    }
+    .header-right{
+        gap:4px;
+    }
+    .main{
+        display:flex;
         flex-direction:column;
-        gap:10px;
+        overflow:visible;
     }
-    .status-items{
+    .left,
+    .right{
         width:100%;
     }
-    .status-badge{
-        flex:1;
-        text-align:center;
+    .center{
+        min-height:480px;
+        order:-1;
     }
-    .area-card{
-        width:100%;
-        margin-right:0;
-    }
-    .market-card{
-        width:100%;
-        margin-right:0;
-    }
-    .display-area{
-        grid-template-columns:1fr;
-    }
-    .car-slot{
-        min-height:180px;
-    }
-    .scene-row{
+    .scene-area{
         display:none;
     }
-    .showroom{
-        min-height:750px;
+}
+/* =========================================================
+   ULTRA SMALL
+========================================================= */
+@media(max-width:400px){
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:5px;
+    }
+    .header-right{
+        width:100%;
+    }
+    .status{
+        flex:1;
+        text-align:center;
     }
 }
 </style>
 </head>
 <body>
 <div id="game-container">
-<!-- ================= HEADER ================= -->
-<header class="status-bar">
-<div class="shop-title">
+<!-- =====================================================
+     HEADER
+===================================================== -->
+<header class="header">
+<div class="logo">
     🚗 クルマ屋経営シミュレーター
 </div>
-<div class="status-items">
-    <div class="status-badge">
+<div class="header-right">
+    <div class="status">
         💰 所持金
-        <span class="val" id="money">500</span> 万円
+        <strong id="money">500</strong> 万円
     </div>
-    <div class="status-badge">
-        🚘 展示中
-        <span class="val" id="car-count">0</span> / 3 台
+    <div class="status">
+        🚘 展示
+        <strong id="car-count">0</strong> / 3
     </div>
 </div>
 </header>
-<!-- ================= MAIN ================= -->
-<div class="main-layout">
-<!-- ================= LEFT ================= -->
-<aside class="left-panel">
-<div class="panel-title">
-    SHOWROOM AREAS
+<!-- =====================================================
+     MESSAGE
+===================================================== -->
+<div
+    class="message"
+    id="message">
+オープンしました！ 車を仕入れてショールームに展示しましょう。
 </div>
-<div class="area-card reception">
-    <div class="area-header">
-        <div class="area-icon">💁</div>
+<!-- =====================================================
+     MAIN
+===================================================== -->
+<div class="main">
+<!-- =====================================================
+     LEFT
+===================================================== -->
+<aside class="side left">
+<div class="section-title">
+    🏢 SHOWROOM
+</div>
+<div class="info-card blue">
+    <div class="card-title">
+        <div class="card-icon">💁</div>
         総合受付
     </div>
-    <div class="area-description">
+    <div class="card-text">
         来店されたお客様を受付。<br>
-        購入・サービスのご案内を行います。
+        購入・整備サービスをご案内します。
     </div>
 </div>
-<div class="area-card sales">
-    <div class="area-header">
-        <div class="area-icon">🤝</div>
+<div class="info-card purple">
+    <div class="card-title">
+        <div class="card-icon">🤝</div>
         商談スペース
     </div>
-    <div class="area-description">
-        展示車を気に入ったお客様と商談。<br>
-        車両販売を行います。
+    <div class="card-text">
+        展示車を見たお客様と商談。<br>
+        車両販売につなげます。
     </div>
 </div>
-<div class="area-card lounge">
-    <div class="area-header">
-        <div class="area-icon">☕</div>
-        ウェイティングラウンジ
+<div class="info-card gold">
+    <div class="card-title">
+        <div class="card-icon">☕</div>
+        ラウンジ
     </div>
-    <div class="area-description">
-        ソファやドリンクを用意した<br>
-        お客様のくつろぎスペース。
+    <div class="card-text">
+        ソファやドリンクを用意。<br>
+        お客様が快適に過ごせる空間です。
     </div>
 </div>
-<div class="area-card service">
-    <div class="area-header">
-        <div class="area-icon">🔧</div>
+<div class="info-card green">
+    <div class="card-title">
+        <div class="card-icon">🔧</div>
         整備・検査ピット
     </div>
-    <div class="area-description">
+    <div class="card-text">
         車検・点検・メンテナンス。<br>
-        サービス収益を生み出します。
+        車両販売とは別の収益源です。
     </div>
 </div>
-<div class="left-divider"></div>
-<!-- MARKET -->
-<div class="market-title">
-    🚘 オークション仕入れ市場
+<div class="stats-card">
+    <div class="stat-row">
+        店舗評価
+        <span class="stat-value">★★★☆☆</span>
+    </div>
+    <div class="stat-row">
+        来店客
+        <span class="stat-value">0 人</span>
+    </div>
+    <div class="stat-row">
+        本日の販売
+        <span class="stat-value">0 台</span>
+    </div>
+    <div class="stat-row">
+        サービス
+        <span class="stat-value">0 件</span>
+    </div>
 </div>
-<div id="market-list"></div>
+</aside>
+<!-- =====================================================
+     CENTER
+===================================================== -->
+<main class="center">
+<div class="light one"></div>
+<div class="light two"></div>
+<div class="showroom-title">
+    <h1>
+        ✨ MAIN SHOWROOM
+    </h1>
+    <p>
+        メイン展示ホール
+    </p>
+</div>
+<!-- FLOOR -->
+<div class="showroom-floor"></div>
+<!-- CARS -->
+<div class="car-display">
+    <div
+        class="car-slot"
+        id="slot-0">
+        <div class="empty">
+            <div class="empty-icon">
+                🚘
+            </div>
+            <div class="empty-text">
+                DISPLAY 01
+            </div>
+            <div class="empty-text">
+                空き
+            </div>
+        </div>
+    </div>
+    <div
+        class="car-slot"
+        id="slot-1">
+        <div class="empty">
+            <div class="empty-icon">
+                🚘
+            </div>
+            <div class="empty-text">
+                DISPLAY 02
+            </div>
+            <div class="empty-text">
+                空き
+            </div>
+        </div>
+    </div>
+    <div
+        class="car-slot"
+        id="slot-2">
+        <div class="empty">
+            <div class="empty-icon">
+                🚘
+            </div>
+            <div class="empty-text">
+                DISPLAY 03
+            </div>
+            <div class="empty-text">
+                空き
+            </div>
+        </div>
+    </div>
+</div>
+<!-- STORE SCENES -->
+<div class="scene-area">
+    <!-- RECEPTION -->
+    <div class="scene">
+        <div class="scene-title">
+            💁 受付
+        </div>
+        <svg viewBox="0 0 300 100">
+            <rect
+                x="20"
+                y="58"
+                width="260"
+                height="30"
+                rx="6"
+                fill="#334155"/>
+            <rect
+                x="30"
+                y="48"
+                width="240"
+                height="14"
+                rx="5"
+                fill="#64748b"/>
+            <rect
+                x="110"
+                y="20"
+                width="58"
+                height="35"
+                rx="4"
+                fill="#0f172a"
+                stroke="#38bdf8"
+                stroke-width="2"/>
+            <rect
+                x="118"
+                y="27"
+                width="42"
+                height="20"
+                fill="#38bdf8"
+                opacity=".5"/>
+            <circle
+                cx="215"
+                cy="35"
+                r="12"
+                fill="#f1c7a5"/>
+            <path
+                d="M201 49 Q215 42 229 49 L232 76 L198 76 Z"
+                fill="#2563eb"/>
+        </svg>
+    </div>
+    <!-- LOUNGE -->
+    <div class="scene">
+        <div class="scene-title">
+            ☕ ラウンジ
+        </div>
+        <svg viewBox="0 0 300 100">
+            <rect
+                x="40"
+                y="48"
+                width="220"
+                height="38"
+                rx="12"
+                fill="#7c3aed"/>
+            <rect
+                x="50"
+                y="30"
+                width="200"
+                height="42"
+                rx="12"
+                fill="#8b5cf6"/>
+            <ellipse
+                cx="150"
+                cy="92"
+                rx="75"
+                ry="6"
+                fill="#334155"/>
+            <circle
+                cx="150"
+                cy="62"
+                r="8"
+                fill="#fbbf24"/>
+        </svg>
+    </div>
+    <!-- PIT -->
+    <div class="scene">
+        <div class="scene-title">
+            🔧 整備ピット
+        </div>
+        <svg viewBox="0 0 300 100">
+            <rect
+                x="35"
+                y="18"
+                width="7"
+                height="70"
+                fill="#94a3b8"/>
+            <rect
+                x="258"
+                y="18"
+                width="7"
+                height="70"
+                fill="#94a3b8"/>
+            <path
+                d="M60 60
+                   L85 35
+                   L215 35
+                   L240 60
+                   L245 78
+                   L55 78 Z"
+                fill="#dc2626"/>
+            <path
+                d="M92 39 L125 39 L125 57 L75 57 Z"
+                fill="#7dd3fc"/>
+            <path
+                d="M132 39 L205 39 L225 57 L132 57 Z"
+                fill="#38bdf8"/>
+            <circle
+                cx="90"
+                cy="78"
+                r="13"
+                fill="#111827"/>
+            <circle
+                cx="210"
+                cy="78"
+                r="13"
+                fill="#111827"/>
+        </svg>
+    </div>
+</div>
+</main>
+<!-- =====================================================
+     RIGHT
+===================================================== -->
+<aside class="side right">
+<div class="section-title">
+    🚘 AUCTION MARKET
+</div>
+<div
+    class="market-list"
+    id="market-list">
+</div>
 <button
     class="sell-button"
     id="sell-btn"
     onclick="sellCar()"
     disabled>
-    💴 展示車を商談・売却する
+    💴 展示車を商談・売却
 </button>
+<div class="service-box">
+    <div class="service-title">
+        🔧 サービス部門
+    </div>
+    <div class="service-text">
+        車検・点検・オイル交換などの
+        サービス客を受け入れます。
+    </div>
+</div>
 </aside>
-<!-- ================= RIGHT ================= -->
-<main class="showroom">
-<div class="ceiling-light"></div>
-<div class="showroom-header">
-    <h2>
-        ✨ MAIN SHOWROOM
-    </h2>
-    <p>
-        お客様を迎えるメイン展示ホール
-    </p>
-</div>
-<!-- DISPLAY CARS -->
-<div class="display-area">
-    <div class="car-slot" id="slot-0">
-        <div class="empty-slot">
-            <div class="big">🚘</div>
-            <div>展示スペース 01</div>
-            <div>空き</div>
-        </div>
-    </div>
-    <div class="car-slot" id="slot-1">
-        <div class="empty-slot">
-            <div class="big">🚘</div>
-            <div>展示スペース 02</div>
-            <div>空き</div>
-        </div>
-    </div>
-    <div class="car-slot" id="slot-2">
-        <div class="empty-slot">
-            <div class="big">🚘</div>
-            <div>展示スペース 03</div>
-            <div>空き</div>
-        </div>
-    </div>
-</div>
-<!-- STORE OBJECTS -->
-<div class="scene-row">
-    <!-- RECEPTION -->
-    <div class="scene-box">
-        <div class="scene-title">
-            💁 RECEPTION
-        </div>
-        <div class="scene-svg">
-            <svg viewBox="0 0 300 110">
-                <!-- counter -->
-                <rect
-                    x="15"
-                    y="62"
-                    width="270"
-                    height="32"
-                    rx="6"
-                    fill="#334155"/>
-                <rect
-                    x="25"
-                    y="50"
-                    width="250"
-                    height="18"
-                    rx="5"
-                    fill="#64748b"/>
-                <!-- monitor -->
-                <rect
-                    x="125"
-                    y="25"
-                    width="55"
-                    height="32"
-                    rx="4"
-                    fill="#0f172a"
-                    stroke="#38bdf8"
-                    stroke-width="2"/>
-                <rect
-                    x="132"
-                    y="31"
-                    width="41"
-                    height="18"
-                    rx="2"
-                    fill="#38bdf8"
-                    opacity=".5"/>
-                <!-- person -->
-                <circle
-                    cx="210"
-                    cy="38"
-                    r="13"
-                    fill="#f1c7a5"/>
-                <path
-                    d="M195 52 Q210 45 225 52 L230 76 L190 76 Z"
-                    fill="#2563eb"/>
-                <rect
-                    x="203"
-                    y="76"
-                    width="14"
-                    height="14"
-                    fill="#172033"/>
-            </svg>
-        </div>
-    </div>
-    <!-- LOUNGE -->
-    <div class="scene-box">
-        <div class="scene-title">
-            ☕ LOUNGE
-        </div>
-        <div class="scene-svg">
-            <svg viewBox="0 0 300 110">
-                <!-- sofa -->
-                <rect
-                    x="45"
-                    y="50"
-                    width="205"
-                    height="42"
-                    rx="12"
-                    fill="#7c3aed"/>
-                <rect
-                    x="55"
-                    y="32"
-                    width="185"
-                    height="40"
-                    rx="12"
-                    fill="#8b5cf6"/>
-                <!-- table -->
-                <ellipse
-                    cx="150"
-                    cy="97"
-                    rx="75"
-                    ry="9"
-                    fill="#334155"/>
-                <rect
-                    x="145"
-                    y="68"
-                    width="10"
-                    height="30"
-                    fill="#475569"/>
-                <!-- coffee -->
-                <circle
-                    cx="150"
-                    cy="65"
-                    r="9"
-                    fill="#fbbf24"/>
-            </svg>
-        </div>
-    </div>
-    <!-- PIT -->
-    <div class="scene-box">
-        <div class="scene-title">
-            🔧 SERVICE PIT
-        </div>
-        <div class="scene-svg">
-            <svg viewBox="0 0 300 110">
-                <!-- floor -->
-                <rect
-                    x="20"
-                    y="88"
-                    width="260"
-                    height="6"
-                    fill="#475569"/>
-                <!-- lift -->
-                <rect
-                    x="40"
-                    y="25"
-                    width="8"
-                    height="65"
-                    fill="#94a3b8"/>
-                <rect
-                    x="252"
-                    y="25"
-                    width="8"
-                    height="65"
-                    fill="#94a3b8"/>
-                <!-- car -->
-                <path
-                    d="M72 63
-                       L92 38
-                       L207 38
-                       L230 63
-                       L240 70
-                       L238 84
-                       L62 84
-                       L60 70 Z"
-                    fill="#dc2626"/>
-                <path
-                    d="M102 42 L125 42 L125 59 L88 59 Z"
-                    fill="#bae6fd"/>
-                <path
-                    d="M132 42 L200 42 L216 59 L132 59 Z"
-                    fill="#7dd3fc"/>
-                <circle
-                    cx="95"
-                    cy="83"
-                    r="13"
-                    fill="#111827"/>
-                <circle
-                    cx="207"
-                    cy="83"
-                    r="13"
-                    fill="#111827"/>
-                <!-- mechanic -->
-                <circle
-                    cx="275"
-                    cy="40"
-                    r="10"
-                    fill="#f1c7a5"/>
-                <path
-                    d="M264 53 Q275 47 286 53 L290 77 L260 77 Z"
-                    fill="#16a34a"/>
-            </svg>
-        </div>
-    </div>
-</div>
-<div class="floor"></div>
-</main>
-</div>
-<!-- ================= MESSAGE ================= -->
-<div
-    class="message-banner"
-    id="message">
-オープンしました！
-左側のオークション市場から車を仕入れて展示しましょう。
 </div>
 </div>
 <script>
 /* =========================================================
-   車データ
+   CAR DATA
 ========================================================= */
-const CAR_TYPES = [
+const CAR_TYPES=[
 {
     id:0,
     name:"ミニスマイル",
     cost:80,
     sell:110,
     svg:`
-    <svg viewBox="0 0 360 170">
-        <defs>
-            <linearGradient id="redCar" x1="0" x2="1">
-                <stop offset="0%" stop-color="#ef4444"/>
-                <stop offset="50%" stop-color="#f87171"/>
-                <stop offset="100%" stop-color="#b91c1c"/>
-            </linearGradient>
-            <linearGradient id="glass1" x1="0" x2="1">
-                <stop offset="0%" stop-color="#bae6fd"/>
-                <stop offset="100%" stop-color="#38bdf8"/>
-            </linearGradient>
-        </defs>
-        <ellipse
-            cx="180"
-            cy="140"
-            rx="135"
-            ry="16"
-            fill="#000"
-            opacity=".35"/>
-        <path
-            d="M42 104
-               L85 55
-               Q96 42 120 42
-               L242 42
-               Q260 42 275 57
-               L316 104
-               L330 111
-               L326 134
-               L34 134
-               L30 111 Z"
-            fill="url(#redCar)"
-            stroke="#7f1d1d"
-            stroke-width="3"/>
-        <path
-            d="M98 60
-               L128 50
-               L128 90
-               L72 90
-               Z"
-            fill="url(#glass1)"
-            stroke="#e0f2fe"
-            stroke-width="2"/>
-        <path
-            d="M138 50
-               L228 50
-               Q245 51 257 66
-               L277 90
-               L138 90 Z"
-            fill="url(#glass1)"
-            stroke="#e0f2fe"
-            stroke-width="2"/>
-        <rect
-            x="38"
-            y="99"
-            width="286"
-            height="12"
-            rx="5"
-            fill="#991b1b"
-            opacity=".6"/>
-        <circle
-            cx="88"
-            cy="132"
-            r="25"
-            fill="#111827"/>
-        <circle
-            cx="88"
-            cy="132"
-            r="12"
-            fill="#94a3b8"/>
-        <circle
-            cx="274"
-            cy="132"
-            r="25"
-            fill="#111827"/>
-        <circle
-            cx="274"
-            cy="132"
-            r="12"
-            fill="#94a3b8"/>
-        <rect
-            x="310"
-            y="101"
-            width="14"
-            height="10"
-            rx="3"
-            fill="#fde68a"/>
-    </svg>
-    `
+<svg viewBox="0 0 360 170">
+<defs>
+<linearGradient id="carRed"
+x1="0" x2="1">
+<stop offset="0%" stop-color="#dc2626"/>
+<stop offset="50%" stop-color="#f87171"/>
+<stop offset="100%" stop-color="#991b1b"/>
+</linearGradient>
+</defs>
+<ellipse
+cx="180"
+cy="145"
+rx="145"
+ry="14"
+fill="#000"
+opacity=".4"/>
+<path
+d="M30 105
+L72 55
+Q90 40 120 40
+L240 40
+Q270 42 286 62
+L325 105
+L335 114
+L330 135
+L28 135
+L25 114Z"
+fill="url(#carRed)"
+stroke="#7f1d1d"
+stroke-width="3"/>
+<path
+d="M88 61
+L120 47
+L120 90
+L65 90Z"
+fill="#7dd3fc"/>
+<path
+d="M130 47
+L225 47
+Q245 48 260 66
+L278 90
+L130 90Z"
+fill="#38bdf8"/>
+<rect
+x="30"
+y="99"
+width="300"
+height="12"
+rx="4"
+fill="#991b1b"/>
+<circle cx="83" cy="134" r="25" fill="#111827"/>
+<circle cx="83" cy="134" r="11" fill="#94a3b8"/>
+<circle cx="278" cy="134" r="25" fill="#111827"/>
+<circle cx="278" cy="134" r="11" fill="#94a3b8"/>
+</svg>
+`
 },
 {
     id:1,
@@ -872,69 +949,55 @@ const CAR_TYPES = [
     cost:100,
     sell:140,
     svg:`
-    <svg viewBox="0 0 360 170">
-        <defs>
-            <linearGradient id="blueCar" x1="0" x2="1">
-                <stop offset="0%" stop-color="#2563eb"/>
-                <stop offset="50%" stop-color="#60a5fa"/>
-                <stop offset="100%" stop-color="#1d4ed8"/>
-            </linearGradient>
-        </defs>
-        <ellipse
-            cx="180"
-            cy="142"
-            rx="145"
-            ry="14"
-            fill="#000"
-            opacity=".35"/>
-        <path
-            d="M32 105
-               L70 65
-               Q88 43 120 43
-               L238 43
-               Q265 43 283 67
-               L320 105
-               L330 114
-               L327 134
-               L30 134
-               L28 114 Z"
-            fill="url(#blueCar)"
-            stroke="#1e3a8a"
-            stroke-width="3"/>
-        <path
-            d="M91 65
-               L120 51
-               L120 91
-               L65 91 Z"
-            fill="#bae6fd"/>
-        <path
-            d="M130 51
-               L225 51
-               Q245 53 258 69
-               L276 91
-               L130 91 Z"
-            fill="#93c5fd"/>
-        <rect
-            x="32"
-            y="99"
-            width="295"
-            height="11"
-            rx="5"
-            fill="#1e40af"
-            opacity=".65"/>
-        <circle cx="86" cy="132" r="25" fill="#111827"/>
-        <circle cx="86" cy="132" r="12" fill="#cbd5e1"/>
-        <circle cx="276" cy="132" r="25" fill="#111827"/>
-        <circle cx="276" cy="132" r="12" fill="#cbd5e1"/>
-        <rect
-            x="310"
-            y="101"
-            width="14"
-            height="9"
-            rx="2"
-            fill="#fef08a"/>
-    </svg>
-    `
+<svg viewBox="0 0 360 170">
+<defs>
+<linearGradient id="carBlue"
+x1="0" x2="1">
+<stop offset="0%" stop-color="#1d4ed8"/>
+<stop offset="50%" stop-color="#60a5fa"/>
+<stop offset="100%" stop-color="#1e40af"/>
+</linearGradient>
+</defs>
+<ellipse
+cx="180"
+cy="145"
+rx="145"
+ry="14"
+fill="#000"
+opacity=".4"/>
+<path
+d="M25 105
+L68 60
+Q85 40 115 40
+L245 40
+Q270 41 288 64
+L328 105
+L338 114
+L334 135
+L25 135
+L22 114Z"
+fill="url(#carBlue)"
+stroke="#1e3a8a"
+stroke-width="3"/>
+<path
+d="M85 63
+L116 48
+L116 90
+L63 90Z"
+fill="#bae6fd"/>
+<path
+d="M126 48
+L225 48
+Q245 49 260 66
+L278 90
+L126 90Z"
+fill="#93c5fd"/>
+<circle cx="80" cy="134" r="25" fill="#111827"/>
+<circle cx="80" cy="134" r="11" fill="#cbd5e1"/>
+<circle cx="280" cy="134" r="25" fill="#111827"/>
+<circle cx="280" cy="134" r="11" fill="#cbd5e1"/>
+</svg>
+`
 },
 {
     id:2,
@@ -942,61 +1005,54 @@ const CAR_TYPES = [
     cost:220,
     sell:290,
     svg:`
-    <svg viewBox="0 0 360 170">
-        <defs>
-            <linearGradient id="silverCar" x1="0" x2="1">
-                <stop offset="0%" stop-color="#64748b"/>
-                <stop offset="50%" stop-color="#e2e8f0"/>
-                <stop offset="100%" stop-color="#64748b"/>
-            </linearGradient>
-        </defs>
-        <ellipse
-            cx="180"
-            cy="142"
-            rx="145"
-            ry="15"
-            fill="#000"
-            opacity=".35"/>
-        <path
-            d="M25 105
-               L55 60
-               Q65 40 96 40
-               L264 40
-               Q292 41 305 63
-               L330 105
-               L340 114
-               L336 135
-               L20 135
-               L18 114 Z"
-            fill="url(#silverCar)"
-            stroke="#475569"
-            stroke-width="3"/>
-        <path
-            d="M70 62 L98 48 L98 90 L54 90 Z"
-            fill="#7dd3fc"/>
-        <path
-            d="M106 48 L154 48 L154 90 L106 90 Z"
-            fill="#7dd3fc"/>
-        <path
-            d="M162 48 L224 48 L245 90 L162 90 Z"
-            fill="#7dd3fc"/>
-        <path
-            d="M250 58 L270 58 L296 90 L250 90 Z"
-            fill="#7dd3fc"/>
-        <rect
-            x="22"
-            y="99"
-            width="314"
-            height="12"
-            rx="5"
-            fill="#475569"
-            opacity=".65"/>
-        <circle cx="82" cy="133" r="26" fill="#111827"/>
-        <circle cx="82" cy="133" r="12" fill="#cbd5e1"/>
-        <circle cx="282" cy="133" r="26" fill="#111827"/>
-        <circle cx="282" cy="133" r="12" fill="#cbd5e1"/>
-    </svg>
-    `
+<svg viewBox="0 0 360 170">
+<defs>
+<linearGradient id="carSilver"
+x1="0" x2="1">
+<stop offset="0%" stop-color="#64748b"/>
+<stop offset="50%" stop-color="#e2e8f0"/>
+<stop offset="100%" stop-color="#64748b"/>
+</linearGradient>
+</defs>
+<ellipse
+cx="180"
+cy="145"
+rx="145"
+ry="14"
+fill="#000"
+opacity=".4"/>
+<path
+d="M20 105
+L55 58
+Q70 40 100 40
+L260 40
+Q290 42 305 64
+L335 105
+L342 115
+L338 135
+L18 135
+L15 115Z"
+fill="url(#carSilver)"
+stroke="#475569"
+stroke-width="3"/>
+<path
+d="M68 61 L98 48 L98 90 L52 90Z"
+fill="#7dd3fc"/>
+<path
+d="M106 48 L150 48 L150 90 L106 90Z"
+fill="#7dd3fc"/>
+<path
+d="M158 48 L220 48 L243 90 L158 90Z"
+fill="#7dd3fc"/>
+<path
+d="M249 58 L270 58 L297 90 L249 90Z"
+fill="#7dd3fc"/>
+<circle cx="78" cy="134" r="26" fill="#111827"/>
+<circle cx="78" cy="134" r="12" fill="#cbd5e1"/>
+<circle cx="285" cy="134" r="26" fill="#111827"/>
+<circle cx="285" cy="134" r="12" fill="#cbd5e1"/>
+</svg>
+`
 },
 {
     id:3,
@@ -1004,57 +1060,58 @@ const CAR_TYPES = [
     cost:250,
     sell:330,
     svg:`
-    <svg viewBox="0 0 360 170">
-        <defs>
-            <linearGradient id="suvRed" x1="0" x2="1">
-                <stop offset="0%" stop-color="#991b1b"/>
-                <stop offset="50%" stop-color="#ef4444"/>
-                <stop offset="100%" stop-color="#7f1d1d"/>
-            </linearGradient>
-        </defs>
-        <ellipse
-            cx="180"
-            cy="143"
-            rx="150"
-            ry="15"
-            fill="#000"
-            opacity=".4"/>
-        <path
-            d="M25 108
-               L60 56
-               Q72 37 105 37
-               L255 37
-               Q284 38 300 62
-               L331 108
-               L341 116
-               L338 136
-               L20 136
-               L18 116 Z"
-            fill="url(#suvRed)"
-            stroke="#450a0a"
-            stroke-width="4"/>
-        <path
-            d="M72 61 L102 46 L102 91 L56 91 Z"
-            fill="#93c5fd"/>
-        <path
-            d="M111 46 L190 46 L190 91 L111 91 Z"
-            fill="#7dd3fc"/>
-        <path
-            d="M198 46 L250 46 Q264 47 276 63 L294 91 L198 91 Z"
-            fill="#7dd3fc"/>
-        <rect
-            x="22"
-            y="98"
-            width="315"
-            height="16"
-            rx="4"
-            fill="#111827"/>
-        <circle cx="80" cy="134" r="28" fill="#111827"/>
-        <circle cx="80" cy="134" r="13" fill="#64748b"/>
-        <circle cx="282" cy="134" r="28" fill="#111827"/>
-        <circle cx="282" cy="134" r="13" fill="#64748b"/>
-    </svg>
-    `
+<svg viewBox="0 0 360 170">
+<defs>
+<linearGradient id="carSUV"
+x1="0" x2="1">
+<stop offset="0%" stop-color="#991b1b"/>
+<stop offset="50%" stop-color="#ef4444"/>
+<stop offset="100%" stop-color="#7f1d1d"/>
+</linearGradient>
+</defs>
+<ellipse
+cx="180"
+cy="145"
+rx="150"
+ry="15"
+fill="#000"
+opacity=".45"/>
+<path
+d="M20 108
+L55 57
+Q70 38 105 38
+L255 38
+Q285 40 302 62
+L335 108
+L342 116
+L338 136
+L18 136
+L15 116Z"
+fill="url(#carSUV)"
+stroke="#450a0a"
+stroke-width="4"/>
+<path
+d="M70 62 L103 47 L103 91 L55 91Z"
+fill="#93c5fd"/>
+<path
+d="M112 47 L190 47 L190 91 L112 91Z"
+fill="#7dd3fc"/>
+<path
+d="M199 47 L250 47 Q265 49 278 64 L298 91 L199 91Z"
+fill="#7dd3fc"/>
+<rect
+x="18"
+y="98"
+width="320"
+height="16"
+rx="4"
+fill="#111827"/>
+<circle cx="78" cy="135" r="28" fill="#111827"/>
+<circle cx="78" cy="135" r="13" fill="#64748b"/>
+<circle cx="284" cy="135" r="28" fill="#111827"/>
+<circle cx="284" cy="135" r="13" fill="#64748b"/>
+</svg>
+`
 },
 {
     id:4,
@@ -1062,68 +1119,66 @@ const CAR_TYPES = [
     cost:350,
     sell:460,
     svg:`
-    <svg viewBox="0 0 360 170">
-        <defs>
-            <linearGradient id="luxury" x1="0" x2="1">
-                <stop offset="0%" stop-color="#020617"/>
-                <stop offset="45%" stop-color="#334155"/>
-                <stop offset="70%" stop-color="#0f172a"/>
-                <stop offset="100%" stop-color="#020617"/>
-            </linearGradient>
-        </defs>
-        <ellipse
-            cx="180"
-            cy="142"
-            rx="150"
-            ry="15"
-            fill="#000"
-            opacity=".5"/>
-        <path
-            d="M22 107
-               L70 67
-               Q89 47 120 47
-               L245 47
-               Q268 48 286 67
-               L329 107
-               L340 115
-               L337 135
-               L20 135
-               L18 115 Z"
-            fill="url(#luxury)"
-            stroke="#64748b"
-            stroke-width="3"/>
-        <path
-            d="M91 67 L121 53 L121 91 L66 91 Z"
-            fill="#38bdf8"
-            opacity=".75"/>
-        <path
-            d="M130 53 L220 53 Q242 54 257 69 L275 91 L130 91 Z"
-            fill="#38bdf8"
-            opacity=".7"/>
-        <rect
-            x="23"
-            y="99"
-            width="313"
-            height="10"
-            rx="4"
-            fill="#020617"/>
-        <circle cx="82" cy="134" r="25" fill="#020617"/>
-        <circle cx="82" cy="134" r="11" fill="#94a3b8"/>
-        <circle cx="280" cy="134" r="25" fill="#020617"/>
-        <circle cx="280" cy="134" r="11" fill="#94a3b8"/>
-        <rect
-            x="313"
-            y="102"
-            width="13"
-            height="8"
-            rx="2"
-            fill="#fef3c7"/>
-    </svg>
-    `
+<svg viewBox="0 0 360 170">
+<defs>
+<linearGradient id="carLuxury"
+x1="0" x2="1">
+<stop offset="0%" stop-color="#020617"/>
+<stop offset="45%" stop-color="#475569"/>
+<stop offset="70%" stop-color="#1e293b"/>
+<stop offset="100%" stop-color="#020617"/>
+</linearGradient>
+</defs>
+<ellipse
+cx="180"
+cy="145"
+rx="150"
+ry="14"
+fill="#000"
+opacity=".5"/>
+<path
+d="M20 108
+L68 67
+Q88 47 120 47
+L245 47
+Q270 48 287 67
+L330 108
+L340 116
+L337 136
+L18 136
+L15 116Z"
+fill="url(#carLuxury)"
+stroke="#64748b"
+stroke-width="3"/>
+<path
+d="M90 67 L120 53 L120 91 L65 91Z"
+fill="#38bdf8"
+opacity=".8"/>
+<path
+d="M129 53
+L220 53
+Q243 54 258 69
+L277 91
+L129 91Z"
+fill="#38bdf8"
+opacity=".75"/>
+<rect
+x="22"
+y="99"
+width="316"
+height="10"
+rx="4"
+fill="#020617"/>
+<circle cx="80" cy="135" r="25" fill="#020617"/>
+<circle cx="80" cy="135" r="11" fill="#94a3b8"/>
+<circle cx="282" cy="135" r="25" fill="#020617"/>
+<circle cx="282" cy="135" r="11" fill="#94a3b8"/>
+</svg>
+`
 }
 ];
 /* =========================================================
-   GAME STATE
+   STATE
 ========================================================= */
 let gameState={
     money:500,
@@ -1137,34 +1192,40 @@ let gameState={
    MARKET
 ========================================================= */
 function renderMarket(){
-    const list=document.getElementById("market-list");
+    const list=
+        document.getElementById("market-list");
     list.innerHTML="";
     CAR_TYPES.forEach((car,index)=>{
-        const card=document.createElement("div");
-        card.className="market-card";
-        card.id=`market-${index}`;
-        card.onclick=()=>buyCar(index);
-        card.innerHTML=`
-            <div class="m-car-name">
+        const el=
+            document.createElement("div");
+        el.className="market";
+        el.id=`market-${index}`;
+        el.innerHTML=`
+            <div class="market-name">
                 ${car.name}
             </div>
-            <div class="m-car-price">
+            <div class="market-price">
                 ${car.cost}万円
             </div>
         `;
-        list.appendChild(card);
+        el.onclick=
+            ()=>buyCar(index);
+        list.appendChild(el);
     });
 }
 /* =========================================================
    BUY
 ========================================================= */
 function buyCar(index){
-    const car=CAR_TYPES[index];
-    const emptyIndex=
-        gameState.cars.findIndex(c=>c===null);
-    if(emptyIndex===-1){
+    const car=
+        CAR_TYPES[index];
+    const slot=
+        gameState.cars.findIndex(
+            c=>c===null
+        );
+    if(slot===-1){
         showMessage(
-            "展示スペースが満車です！まず展示車を売却してください。"
+            "展示スペースが満車です！ 展示車を売却してください。"
         );
         return;
     }
@@ -1175,9 +1236,11 @@ function buyCar(index){
         return;
     }
     gameState.money-=car.cost;
-    gameState.cars[emptyIndex]={...car};
+    gameState.cars[slot]={
+        ...car
+    };
     showMessage(
-        `「${car.name}」を${car.cost}万円で仕入れました！ 展示スペース ${emptyIndex+1} に配置しました。`
+        `「${car.name}」を${car.cost}万円で仕入れました！`
     );
     updateUI();
 }
@@ -1186,15 +1249,18 @@ function buyCar(index){
 ========================================================= */
 function sellCar(){
     const index=
-        gameState.cars.findIndex(c=>c!==null);
+        gameState.cars.findIndex(
+            c=>c!==null
+        );
     if(index===-1)return;
-    const car=gameState.cars[index];
+    const car=
+        gameState.cars[index];
     const profit=
         car.sell-car.cost;
     gameState.money+=car.sell;
     gameState.cars[index]=null;
     showMessage(
-        `🎉 ご成約！「${car.name}」が${car.sell}万円で売れました！ 利益 +${profit}万円`
+        `🎉 「${car.name}」が${car.sell}万円でご成約！ 利益 +${profit}万円`
     );
     updateUI();
 }
@@ -1202,70 +1268,90 @@ function sellCar(){
    UPDATE
 ========================================================= */
 function updateUI(){
-    document.getElementById("money").innerText=
+    document.getElementById("money")
+        .innerText=
         gameState.money;
     const count=
-        gameState.cars.filter(c=>c!==null).length;
-    document.getElementById("car-count").innerText=
+        gameState.cars.filter(
+            c=>c!==null
+        ).length;
+    document.getElementById("car-count")
+        .innerText=
         count;
-    gameState.cars.forEach((car,index)=>{
-        const slot=
-            document.getElementById(`slot-${index}`);
-        if(car){
-            slot.className="car-slot filled";
-            slot.innerHTML=`
-                <div class="car-display-card">
-                    <div class="car-img-svg">
-                        ${car.svg}
-                    </div>
-                    <div class="car-info">
-                        <div class="title">
+    gameState.cars.forEach(
+        (car,index)=>{
+            const slot=
+                document.getElementById(
+                    `slot-${index}`
+                );
+            if(car){
+                slot.className=
+                    "car-slot filled";
+                slot.innerHTML=`
+                    <div class="car-card">
+                        <div class="car-svg">
+                            ${car.svg}
+                        </div>
+                        <div class="car-name">
                             ${car.name}
                         </div>
-                        <div class="price">
-                            想定売却価格 ${car.sell}万円
+                        <div class="car-price">
+                            想定売却 ${car.sell}万円
                         </div>
                     </div>
-                </div>
-            `;
-        }else{
-            slot.className="car-slot";
-            slot.innerHTML=`
-                <div class="empty-slot">
-                    <div class="big">
-                        🚘
+                `;
+            }else{
+                slot.className=
+                    "car-slot";
+                slot.innerHTML=`
+                    <div class="empty">
+                        <div class="empty-icon">
+                            🚘
+                        </div>
+                        <div class="empty-text">
+                            DISPLAY ${String(index+1).padStart(2,"0")}
+                        </div>
+                        <div class="empty-text">
+                            空き
+                        </div>
                     </div>
-                    <div>
-                        展示スペース ${index+1}
-                    </div>
-                    <div>
-                        空き
-                    </div>
-                </div>
-            `;
+                `;
+            }
         }
-    });
-    CAR_TYPES.forEach((car,index)=>{
-        const card=
-            document.getElementById(`market-${index}`);
-        if(
-            gameState.money<car.cost ||
-            count>=3
-        ){
-            card.classList.add("disabled");
-        }else{
-            card.classList.remove("disabled");
+    );
+    CAR_TYPES.forEach(
+        (car,index)=>{
+            const market=
+                document.getElementById(
+                    `market-${index}`
+                );
+            if(
+                gameState.money<car.cost ||
+                count>=3
+            ){
+                market.classList.add(
+                    "disabled"
+                );
+            }else{
+                market.classList.remove(
+                    "disabled"
+                );
+            }
         }
-    });
-    document.getElementById("sell-btn").disabled=
+    );
+    document.getElementById(
+        "sell-btn"
+    ).disabled=
         count===0;
 }
 /* =========================================================
    MESSAGE
 ========================================================= */
-function showMessage(message){
-    document.getElementById("message").innerText=
-        message;
+function showMessage(text){
+    document.getElementById(
+        "message"
+    ).innerText=
+        text;
 }
 /* =========================================================
    START
