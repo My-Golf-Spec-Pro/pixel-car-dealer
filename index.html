@@ -1,1 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>クルマ屋経営シミュレーション</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #1a1a24;
+      color: #fff;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    #game-container {
+      width: 800px;
+      background-color: #2b2b36;
+      border: 4px solid #4a4a5a;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+    /* ステータスバー */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      background: #111118;
+      padding: 12px 20px;
+      border-bottom: 2px solid #4a4a5a;
+      font-weight: bold;
+    }
+    .status-item span { color: #40e0d0; }
 
+    /* メインゲーム画面（Canvas） */
+    canvas {
+      display: block;
+      width: 100%;
+      height: 400px;
+      background-color: #dcdcdc;
+      image-rendering: pixelated; /* ドット絵のぼやけ防止 */
+    }
+
+    /* 操作パネル・UI */
+    .control-panel {
+      padding: 15px;
+      background: #22222e;
+    }
+    .message-box {
+      background: #111118;
+      border: 2px solid #4a4a5a;
+      padding: 10px;
+      margin-bottom: 12px;
+      height: 45px;
+      color: #ffeb3b;
+      font-size: 14px;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      flex: 1;
+      padding: 12px;
+      background: #3a3a4c;
+      color: white;
+      border: 2px solid #6a6a7c;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    button:hover { background: #5a5a6c; }
+    button:disabled { background: #222; color: #555; border-color: #333; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+<div id="game-container">
+  <div class="status-bar">
+    <div class="status-item">クルマ屋 Lv.<span>1</span></div>
+    <div class="status-item">資金: <span id="money">500</span>万円</div>
+    <div class="status-item">展示数: <span id="car-count">0</span>/3</div>
+  </div>
+
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+  <div class="control-panel">
+    <div class="message-box" id="message">ゲーム開始！「仕入れ」ボタンで展示場に車を置きましょう。</div>
+    <div class="button-group">
+      <button id="buy-btn" onclick="buyCar()">ミニスマイルを仕入れる (80万円)</button>
+      <button id="sell-btn" onclick="sellCar()" disabled>商談して売却する (110万円)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- ゲームの状態データ ---
+  let gameState = {
+    money: 500,
+    cars: [], // 展示中の車
+    maxCars: 3
+  };
+
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // --- 描画処理 (ドット絵風の描画) ---
+  function draw() {
+    // 1. 背景（床）
+    ctx.fillStyle = '#e6e6e6';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Grid線（タイルの質感）
+    ctx.strokeStyle = '#cccccc';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < canvas.width; x += 40) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += 40) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+
+    // 2. 青いラグ（展示スペース 3つ）
+    const rugPositions = [150, 350, 550];
+    rugPositions.forEach((x, index) => {
+      ctx.fillStyle = '#2a52be';
+      ctx.fillRect(x, 150, 120, 160);
+      ctx.strokeStyle = '#1e3c8a';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(x, 150, 120, 160);
+
+      // 車が展示されている場合、車を描画
+      if (gameState.cars[index]) {
+        drawPixelCar(x + 20, 180, gameState.cars[index].color);
+      }
+    });
+
+    // 3. 簡単なカウンターデスク
+    ctx.fillStyle = '#8b5a2b';
+    ctx.fillRect(50, 50, 120, 40);
+    ctx.fillStyle = '#333';
+    ctx.fillRect(90, 45, 25, 10); // PCモニター風
+  }
+
+  // ドット絵風の車を描く関数
+  function drawPixelCar(x, y, color) {
+    // 車体本体
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y + 20, 80, 50);
+    // 屋根（ツートンカラー風に赤）
+    ctx.fillStyle = '#e63946';
+    ctx.fillRect(x + 15, y, 50, 25);
+    // 窓
+    ctx.fillStyle = '#a8dadc';
+    ctx.fillRect(x + 20, y + 5, 40, 15);
+    // タイヤ
+    ctx.fillStyle = '#111';
+    ctx.fillRect(x + 10, y + 65, 15, 15);
+    ctx.fillRect(x + 55, y + 65, 15, 15);
+  }
+
+  // --- ゲームロジック ---
+
+  // 車の仕入れ
+  function buyCar() {
+    if (gameState.money < 80) {
+      showMessage("資金が足りません！");
+      return;
+    }
+    if (gameState.cars.length >= gameState.maxCars) {
+      showMessage("展示スペースが満車です！");
+      return;
+    }
+
+    gameState.money -= 80;
+    gameState.cars.push({ name: 'ミニスマイル', price: 110, color: '#f1faee' });
+    
+    showMessage("「ミニスマイル」を80万円で仕入れました！");
+    updateUI();
+    draw();
+  }
+
+  // 車の売却
+  function sellCar() {
+    if (gameState.cars.length === 0) return;
+
+    const soldCar = gameState.cars.shift(); // 先頭の車を売却
+    gameState.money += soldCar.price;
+
+    showMessage(`「${soldCar.name}」が${soldCar.price}万円で売れました！ (利益 +30万円)`);
+    updateUI();
+    draw();
+  }
+
+  // UIとボタン状態の更新
+  function updateUI() {
+    document.getElementById('money').innerText = gameState.money;
+    document.getElementById('car-count').innerText = gameState.cars.length;
+
+    // ボタンの有効/無効切り替え
+    document.getElementById('buy-btn').disabled = (gameState.money < 80 || gameState.cars.length >= gameState.maxCars);
+    document.getElementById('sell-btn').disabled = (gameState.cars.length === 0);
+  }
+
+  function showMessage(msg) {
+    document.getElementById('message').innerText = msg;
+  }
+
+  // 初期化実行
+  draw();
+  updateUI();
+</script>
+
+</body>
+</html>
