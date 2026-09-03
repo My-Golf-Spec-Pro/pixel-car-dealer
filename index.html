@@ -12,10 +12,10 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",sans-serif;
 }
 :root{
-    --bg:#07101d;
-    --panel:#101c2b;
-    --panel2:#162638;
-    --border:#30445b;
+    --bg:#07111f;
+    --panel:#111e2d;
+    --panel2:#18283a;
+    --border:#344b63;
     --blue:#38bdf8;
     --green:#22c55e;
     --gold:#fbbf24;
@@ -30,7 +30,12 @@ body{
 }
 body{
     background:
-        radial-gradient(circle at 50% 35%,#203c5d,#08111f 70%);
+        radial-gradient(
+            circle at 50% 35%,
+            #284d72 0%,
+            #101f32 45%,
+            #050b14 100%
+        );
     color:var(--text);
 }
 /* =========================================================
@@ -38,104 +43,165 @@ body{
 ========================================================= */
 #game-container{
     width:100vw;
-    height:100vh;
+    height:100dvh;
+    min-height:0;
     display:flex;
     flex-direction:column;
     overflow:hidden;
-    background:#0a1524;
 }
 /* =========================================================
    HEADER
 ========================================================= */
 .header{
-    height:64px;
+    height:58px;
     flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 18px;
-    background:linear-gradient(180deg,#17283c,#101d2d);
-    border-bottom:1px solid var(--border);
+    padding:0 16px;
+    background:
+        linear-gradient(
+            180deg,
+            #1d3045,
+            #101c2c
+        );
+    border-bottom:1px solid #3c536b;
+    box-shadow:0 4px 18px rgba(0,0,0,.25);
 }
 .logo{
-    font-size:1.2rem;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:1.05rem;
     font-weight:900;
-    letter-spacing:.5px;
+}
+.logo-mark{
+    width:34px;
+    height:34px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        linear-gradient(
+            145deg,
+            #38bdf8,
+            #2563eb
+        );
+    box-shadow:
+        0 5px 14px rgba(56,189,248,.25);
 }
 .header-right{
     display:flex;
-    gap:9px;
+    gap:7px;
 }
 .status{
-    background:#091422;
+    min-width:110px;
+    padding:6px 10px;
+    border-radius:8px;
+    background:#081421;
     border:1px solid #344a62;
-    border-radius:9px;
-    padding:7px 12px;
-    font-size:.82rem;
-    font-weight:700;
+    text-align:center;
+    font-size:.68rem;
+    color:#cbd5e1;
 }
 .status strong{
     color:var(--gold);
-    font-size:.95rem;
+    font-size:.88rem;
+    margin-left:3px;
 }
 /* =========================================================
    MESSAGE
 ========================================================= */
 .message{
-    height:36px;
+    height:32px;
     flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:linear-gradient(90deg,#075985,#0284c7);
-    font-size:.78rem;
+    padding:0 12px;
+    background:
+        linear-gradient(
+            90deg,
+            #075985,
+            #0284c7,
+            #075985
+        );
+    font-size:.7rem;
     font-weight:800;
+    box-shadow:
+        0 2px 10px rgba(0,0,0,.2);
 }
 /* =========================================================
-   THREE COLUMN MAIN
+   MAIN
 ========================================================= */
 .main{
     flex:1;
     min-height:0;
     display:grid;
+    /*
+       左：情報
+       中：ショールーム
+       右：仕入れ
+    */
     grid-template-columns:
-        minmax(220px,250px)
+        220px
         minmax(0,1fr)
-        minmax(220px,250px);
-    gap:10px;
-    padding:10px;
+        225px;
+    gap:9px;
+    padding:9px;
     overflow:hidden;
 }
 /* =========================================================
-   COMMON PANEL
+   SIDE
 ========================================================= */
 .side{
     min-width:0;
     min-height:0;
     display:flex;
     flex-direction:column;
-    gap:8px;
+    gap:7px;
     overflow:hidden;
 }
 .section-title{
-    font-size:.72rem;
-    font-weight:900;
-    letter-spacing:1px;
-    color:#94a3b8;
-    height:22px;
+    height:21px;
+    flex-shrink:0;
     display:flex;
     align-items:center;
+    font-size:.67rem;
+    font-weight:900;
+    letter-spacing:1px;
+    color:#aebdcd;
 }
 /* =========================================================
-   LEFT CARDS
+   LEFT
 ========================================================= */
 .info-card{
-    background:
-        linear-gradient(145deg,#17283b,#101d2c);
-    border:1px solid var(--border);
+    position:relative;
+    flex:1;
+    min-height:0;
+    overflow:hidden;
+    padding:9px;
     border-radius:10px;
-    padding:10px;
-    flex-shrink:0;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(29,48,68,.98),
+            rgba(14,27,42,.98)
+        );
+    border:1px solid #334b63;
+    box-shadow:
+        0 5px 14px rgba(0,0,0,.18);
+}
+.info-card::after{
+    content:"";
+    position:absolute;
+    right:-25px;
+    top:-25px;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:rgba(255,255,255,.025);
 }
 .info-card.blue{
     border-left:4px solid #38bdf8;
@@ -144,7 +210,7 @@ body{
     border-left:4px solid #818cf8;
 }
 .info-card.gold{
-    border-left:4px solid #f59e0b;
+    border-left:4px solid #fbbf24;
 }
 .info-card.green{
     border-left:4px solid #22c55e;
@@ -153,40 +219,47 @@ body{
     display:flex;
     align-items:center;
     gap:7px;
-    font-size:.82rem;
+    font-size:.75rem;
     font-weight:900;
     margin-bottom:4px;
 }
 .card-icon{
     width:27px;
     height:27px;
-    border-radius:7px;
+    flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:center;
+    border-radius:7px;
     background:#091522;
-    font-size:.95rem;
+    font-size:.9rem;
 }
 .card-text{
-    color:#94a3b8;
-    font-size:.68rem;
-    line-height:1.35;
+    color:#a8b6c5;
+    font-size:.61rem;
+    line-height:1.4;
 }
 /* =========================================================
-   MINI STATS
+   STORE STATUS
 ========================================================= */
 .stats-card{
-    background:#101e2e;
-    border:1px solid var(--border);
+    flex-shrink:0;
+    padding:8px 9px;
     border-radius:10px;
-    padding:10px;
+    background:
+        linear-gradient(
+            145deg,
+            #16283b,
+            #0d1a29
+        );
+    border:1px solid #344b63;
 }
 .stat-row{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    font-size:.7rem;
-    padding:4px 0;
+    padding:3px 0;
+    font-size:.61rem;
     border-bottom:1px solid rgba(148,163,184,.1);
 }
 .stat-row:last-child{
@@ -204,37 +277,42 @@ body{
     min-width:0;
     min-height:0;
     overflow:hidden;
-    border:1px solid #38516d;
     border-radius:13px;
+    border:1px solid #45627d;
     background:
-        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
         radial-gradient(
-            ellipse at 50% 35%,
-            #2a4b70 0%,
-            #172d47 42%,
-            #0b1625 85%
+            ellipse at 50% 25%,
+            rgba(83,146,195,.38),
+            transparent 55%
+        ),
+        linear-gradient(
+            180deg,
+            #19344f 0%,
+            #10253a 55%,
+            #091522 100%
         );
-    background-size:
-        35px 35px,
-        35px 35px,
-        100% 100%;
+    box-shadow:
+        inset 0 0 50px rgba(0,0,0,.35),
+        0 8px 22px rgba(0,0,0,.22);
 }
-/* showroom title */
+/* =========================================================
+   SHOWROOM HEADER
+========================================================= */
 .showroom-title{
     position:absolute;
-    left:14px;
-    top:11px;
-    z-index:10;
+    left:16px;
+    top:12px;
+    z-index:20;
 }
 .showroom-title h1{
     font-size:1rem;
     font-weight:900;
+    letter-spacing:.4px;
 }
 .showroom-title p{
     margin-top:2px;
-    color:#94a3b8;
-    font-size:.63rem;
+    color:#9fb1c3;
+    font-size:.6rem;
 }
 /* =========================================================
    LIGHTS
@@ -242,49 +320,52 @@ body{
 .light{
     position:absolute;
     top:0;
-    width:23%;
-    height:7px;
-    background:#e0f2fe;
+    width:20%;
+    height:6px;
     border-radius:10px;
+    background:#f8fdff;
     box-shadow:
-        0 0 18px 7px rgba(186,230,253,.35);
+        0 0 20px 8px rgba(186,230,253,.35);
 }
 .light.one{
-    left:12%;
+    left:13%;
 }
 .light.two{
-    right:12%;
+    right:13%;
 }
 /* =========================================================
    SHOWROOM FLOOR
 ========================================================= */
 .showroom-floor{
     position:absolute;
-    left:0;
-    right:0;
-    bottom:-4%;
-    height:52%;
+    left:-5%;
+    right:-5%;
+    bottom:-10%;
+    height:54%;
     background:
-        linear-gradient(
-            135deg,
-            #29384a,
-            #121c2b
+        radial-gradient(
+            ellipse at center,
+            #45576a 0%,
+            #263749 45%,
+            #111d2b 100%
         );
     transform:
-        perspective(600px)
-        rotateX(45deg);
-    transform-origin:bottom;
+        perspective(650px)
+        rotateX(55deg);
+    transform-origin:center bottom;
+    box-shadow:
+        0 -15px 35px rgba(0,0,0,.25);
 }
 /* =========================================================
    CAR DISPLAY
 ========================================================= */
 .car-display{
     position:absolute;
-    left:12px;
-    right:12px;
-    top:72px;
-    bottom:115px;
-    z-index:5;
+    left:10px;
+    right:10px;
+    top:64px;
+    bottom:118px;
+    z-index:10;
     display:grid;
     grid-template-columns:
         repeat(3,minmax(0,1fr));
@@ -292,52 +373,81 @@ body{
 }
 .car-slot{
     min-width:0;
-    border-radius:11px;
-    border:1px solid rgba(148,163,184,.22);
-    background:
-        linear-gradient(
-            180deg,
-            rgba(15,23,42,.35),
-            rgba(15,23,42,.72)
-        );
+    min-height:0;
+    position:relative;
     display:flex;
     align-items:center;
     justify-content:center;
+    border-radius:11px;
+    border:1px solid rgba(148,163,184,.25);
+    background:
+        linear-gradient(
+            180deg,
+            rgba(5,15,27,.18),
+            rgba(5,15,27,.55)
+        );
     overflow:hidden;
-    position:relative;
+    transition:.2s;
 }
 .car-slot.filled{
     border-color:#38bdf8;
+    background:
+        radial-gradient(
+            ellipse at 50% 55%,
+            rgba(56,189,248,.1),
+            transparent 65%
+        ),
+        rgba(6,17,29,.48);
     box-shadow:
-        0 0 20px rgba(56,189,248,.12),
-        inset 0 0 25px rgba(56,189,248,.05);
+        inset 0 0 25px rgba(56,189,248,.07),
+        0 0 20px rgba(56,189,248,.08);
 }
-/* empty */
+.car-slot::after{
+    content:"";
+    position:absolute;
+    left:15%;
+    right:15%;
+    bottom:13%;
+    height:3px;
+    border-radius:50%;
+    background:#38bdf8;
+    opacity:.18;
+    filter:blur(3px);
+}
+/* =========================================================
+   EMPTY
+========================================================= */
 .empty{
+    position:relative;
+    z-index:2;
     text-align:center;
-    color:#64748b;
+    color:#718399;
 }
 .empty-icon{
-    font-size:2rem;
-    opacity:.5;
+    font-size:1.8rem;
+    opacity:.35;
 }
 .empty-text{
-    font-size:.62rem;
-    margin-top:4px;
+    font-size:.56rem;
+    margin-top:3px;
 }
-/* car */
+/* =========================================================
+   CAR
+========================================================= */
 .car-card{
+    position:relative;
+    z-index:3;
     width:100%;
     height:100%;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    padding:5px;
+    padding:4px;
 }
 .car-svg{
     width:100%;
-    height:58%;
+    height:72%;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -347,88 +457,155 @@ body{
     height:100%;
     filter:
         drop-shadow(
-            0 10px 8px rgba(0,0,0,.5)
+            0 12px 9px rgba(0,0,0,.58)
         );
 }
 .car-name{
     font-size:.72rem;
     font-weight:900;
+    margin-top:1px;
+    text-shadow:
+        0 2px 5px #000;
 }
 .car-price{
-    font-size:.58rem;
-    color:#38bdf8;
+    font-size:.56rem;
+    color:#5dd3ff;
     font-weight:800;
     margin-top:2px;
 }
 /* =========================================================
-   CENTER STORE SCENES
+   SHOWROOM SCENE AREA
 ========================================================= */
 .scene-area{
     position:absolute;
-    left:12px;
-    right:12px;
-    bottom:12px;
-    z-index:7;
-    height:92px;
+    left:10px;
+    right:10px;
+    bottom:9px;
+    height:94px;
+    z-index:15;
     display:grid;
     grid-template-columns:
         repeat(3,minmax(0,1fr));
     gap:7px;
 }
 .scene{
+    position:relative;
     min-width:0;
+    overflow:hidden;
     border-radius:9px;
     background:
-        rgba(8,18,31,.72);
-    border:1px solid rgba(148,163,184,.18);
-    padding:5px;
-    backdrop-filter:blur(5px);
+        linear-gradient(
+            180deg,
+            rgba(13,28,44,.86),
+            rgba(7,17,28,.92)
+        );
+    border:1px solid rgba(148,163,184,.22);
+    box-shadow:
+        0 5px 12px rgba(0,0,0,.25);
 }
 .scene-title{
-    font-size:.56rem;
-    color:#cbd5e1;
+    position:absolute;
+    left:7px;
+    top:5px;
+    z-index:3;
+    font-size:.57rem;
     font-weight:900;
-    margin-bottom:1px;
+    color:#e2e8f0;
+    text-shadow:
+        0 1px 3px #000;
 }
 .scene svg{
+    position:absolute;
+    left:0;
+    bottom:0;
     width:100%;
-    height:70px;
+    height:100%;
 }
 /* =========================================================
    RIGHT MARKET
 ========================================================= */
+.market-panel{
+    min-height:0;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    padding:9px;
+    border-radius:11px;
+    background:
+        linear-gradient(
+            145deg,
+            #15283b,
+            #0d1a28
+        );
+    border:1px solid #344b63;
+    box-shadow:
+        0 6px 18px rgba(0,0,0,.2);
+}
+.market-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:7px;
+}
+.market-heading strong{
+    font-size:.76rem;
+}
+.market-heading span{
+    color:#64748b;
+    font-size:.55rem;
+}
+/* =========================================================
+   MARKET LIST
+========================================================= */
 .market-list{
+    flex:1;
     min-height:0;
     overflow:hidden;
 }
 .market{
-    background:#122235;
-    border:1px solid #2b4057;
-    border-radius:8px;
-    padding:7px 8px;
-    margin-bottom:6px;
+    position:relative;
     display:flex;
     align-items:center;
     justify-content:space-between;
+    min-height:52px;
+    padding:7px 8px;
+    margin-bottom:6px;
+    border-radius:8px;
+    background:
+        linear-gradient(
+            135deg,
+            #1a3045,
+            #112235
+        );
+    border:1px solid #2f465d;
     cursor:pointer;
     transition:.15s;
 }
 .market:hover:not(.disabled){
     border-color:#38bdf8;
+    background:#1b3853;
     transform:translateX(-2px);
-    background:#18304a;
 }
 .market.disabled{
-    opacity:.35;
+    opacity:.3;
     cursor:not-allowed;
 }
+.market-left{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
 .market-name{
-    font-size:.7rem;
+    font-size:.68rem;
     font-weight:900;
 }
+.market-desc{
+    color:#8294a7;
+    font-size:.5rem;
+}
 .market-price{
-    color:#38bdf8;
-    font-size:.65rem;
+    color:#5dd3ff;
+    font-size:.67rem;
     font-weight:900;
 }
 /* =========================================================
@@ -437,113 +614,157 @@ body{
 .sell-button{
     flex-shrink:0;
     width:100%;
-    padding:10px;
+    padding:10px 8px;
     border:0;
     border-radius:9px;
     background:
-        linear-gradient(90deg,#15803d,#22c55e);
-    color:white;
-    font-size:.76rem;
+        linear-gradient(
+            90deg,
+            #15803d,
+            #22c55e
+        );
+    color:#fff;
+    font-size:.7rem;
     font-weight:900;
     cursor:pointer;
+    box-shadow:
+        0 5px 12px rgba(34,197,94,.18);
 }
 .sell-button:disabled{
     background:#263548;
     color:#64748b;
+    box-shadow:none;
     cursor:not-allowed;
 }
 /* =========================================================
-   SERVICE CARD
+   SERVICE
 ========================================================= */
 .service-box{
+    flex-shrink:0;
+    padding:9px;
+    border-radius:10px;
     background:
         linear-gradient(
             145deg,
-            #123125,
-            #10251e
+            #143627,
+            #0e251b
         );
-    border:1px solid #235a43;
-    border-radius:10px;
-    padding:10px;
-    margin-top:auto;
+    border:1px solid #286148;
 }
 .service-title{
-    font-size:.78rem;
+    font-size:.72rem;
     font-weight:900;
-    margin-bottom:5px;
+    margin-bottom:4px;
 }
 .service-text{
-    font-size:.65rem;
     color:#86efac;
-    line-height:1.4;
+    font-size:.58rem;
+    line-height:1.35;
 }
 /* =========================================================
-   RESPONSIVE
+   CAR SVG COMMON
 ========================================================= */
-@media(max-width:850px){
+.car-highlight{
+    opacity:.35;
+}
+/* =========================================================
+   TABLET LANDSCAPE
+========================================================= */
+@media(max-width:950px) and (min-height:500px){
     .main{
         grid-template-columns:
             190px
             minmax(0,1fr)
-            190px;
+            195px;
         gap:6px;
         padding:6px;
     }
+    .header{
+        height:54px;
+    }
+    .message{
+        height:29px;
+        font-size:.63rem;
+    }
+    .car-display{
+        top:58px;
+        bottom:108px;
+    }
+    .scene-area{
+        height:86px;
+    }
+    .scene-title{
+        font-size:.51rem;
+    }
     .card-text{
-        font-size:.6rem;
-    }
-    .logo{
-        font-size:1rem;
-    }
-    .status{
-        font-size:.7rem;
-        padding:6px 8px;
+        font-size:.56rem;
     }
 }
 /* =========================================================
    PORTRAIT
 ========================================================= */
-@media(max-width:650px){
+@media(max-width:700px){
     html,
     body{
         overflow:auto;
     }
     #game-container{
         height:auto;
-        min-height:100vh;
+        min-height:100dvh;
     }
     .header{
         height:auto;
-        min-height:58px;
-        padding:8px;
+        min-height:55px;
+        padding:7px 9px;
+    }
+    .logo{
+        font-size:.9rem;
     }
     .header-right{
         gap:4px;
+    }
+    .status{
+        min-width:80px;
+        padding:5px 6px;
+        font-size:.58rem;
+    }
+    .status strong{
+        font-size:.72rem;
     }
     .main{
         display:flex;
         flex-direction:column;
         overflow:visible;
-    }
-    .left,
-    .right{
-        width:100%;
+        padding:7px;
     }
     .center{
-        min-height:480px;
         order:-1;
+        min-height:470px;
+    }
+    .side{
+        overflow:visible;
+    }
+    .info-card{
+        flex:none;
+        min-height:80px;
     }
     .scene-area{
         display:none;
     }
+    .market-panel{
+        min-height:330px;
+    }
+    .market-list{
+        overflow:visible;
+    }
 }
 /* =========================================================
-   ULTRA SMALL
+   VERY SMALL
 ========================================================= */
 @media(max-width:400px){
     .header{
         flex-direction:column;
-        align-items:flex-start;
+        align-items:stretch;
         gap:5px;
     }
     .header-right{
@@ -551,7 +772,6 @@ body{
     }
     .status{
         flex:1;
-        text-align:center;
     }
 }
 </style>
@@ -563,16 +783,21 @@ body{
 ===================================================== -->
 <header class="header">
 <div class="logo">
-    🚗 クルマ屋経営シミュレーター
+    <div class="logo-mark">🚗</div>
+    <div>
+        クルマ屋経営シミュレーター
+    </div>
 </div>
 <div class="header-right">
     <div class="status">
         💰 所持金
-        <strong id="money">500</strong> 万円
+        <strong id="money">500</strong>
+        万円
     </div>
     <div class="status">
         🚘 展示
-        <strong id="car-count">0</strong> / 3
+        <strong id="car-count">0</strong>
+        / 3
     </div>
 </div>
 </header>
@@ -593,7 +818,7 @@ body{
 ===================================================== -->
 <aside class="side left">
 <div class="section-title">
-    🏢 SHOWROOM
+    🏢 店舗・経営
 </div>
 <div class="info-card blue">
     <div class="card-title">
@@ -668,9 +893,10 @@ body{
         メイン展示ホール
     </p>
 </div>
-<!-- FLOOR -->
 <div class="showroom-floor"></div>
-<!-- CARS -->
+<!-- =================================================
+     CARS
+================================================= -->
 <div class="car-display">
     <div
         class="car-slot"
@@ -718,7 +944,9 @@ body{
         </div>
     </div>
 </div>
-<!-- STORE SCENES -->
+<!-- =================================================
+     STORE SCENES
+================================================= -->
 <div class="scene-area">
     <!-- RECEPTION -->
     <div class="scene">
@@ -726,44 +954,66 @@ body{
             💁 受付
         </div>
         <svg viewBox="0 0 300 100">
+            <defs>
+                <linearGradient
+                    id="desk"
+                    x1="0"
+                    x2="1">
+                    <stop
+                        offset="0%"
+                        stop-color="#334155"/>
+                    <stop
+                        offset="100%"
+                        stop-color="#64748b"/>
+                </linearGradient>
+            </defs>
             <rect
-                x="20"
-                y="58"
-                width="260"
-                height="30"
-                rx="6"
-                fill="#334155"/>
+                x="18"
+                y="55"
+                width="264"
+                height="32"
+                rx="7"
+                fill="url(#desk)"/>
             <rect
                 x="30"
-                y="48"
+                y="45"
                 width="240"
                 height="14"
                 rx="5"
-                fill="#64748b"/>
+                fill="#94a3b8"/>
             <rect
-                x="110"
-                y="20"
-                width="58"
+                x="105"
+                y="19"
+                width="72"
                 height="35"
                 rx="4"
-                fill="#0f172a"
+                fill="#07111f"
                 stroke="#38bdf8"
                 stroke-width="2"/>
             <rect
-                x="118"
-                y="27"
-                width="42"
-                height="20"
-                fill="#38bdf8"
-                opacity=".5"/>
+                x="113"
+                y="26"
+                width="56"
+                height="21"
+                rx="2"
+                fill="#0ea5e9"
+                opacity=".65"/>
             <circle
-                cx="215"
+                cx="220"
                 cy="35"
+                r="13"
+                fill="#f1c7a5"/>
+            <path
+                d="M205 49 Q220 42 235 49 L239 82 L201 82 Z"
+                fill="#2563eb"/>
+            <circle
+                cx="78"
+                cy="34"
                 r="12"
                 fill="#f1c7a5"/>
             <path
-                d="M201 49 Q215 42 229 49 L232 76 L198 76 Z"
-                fill="#2563eb"/>
+                d="M63 48 Q78 42 93 48 L96 80 L60 80 Z"
+                fill="#16a34a"/>
         </svg>
     </div>
     <!-- LOUNGE -->
@@ -773,29 +1023,50 @@ body{
         </div>
         <svg viewBox="0 0 300 100">
             <rect
-                x="40"
+                x="35"
                 y="48"
-                width="220"
-                height="38"
-                rx="12"
+                width="230"
+                height="39"
+                rx="13"
+                fill="#5b21b6"/>
+            <rect
+                x="45"
+                y="30"
+                width="210"
+                height="42"
+                rx="13"
                 fill="#7c3aed"/>
             <rect
-                x="50"
-                y="30"
-                width="200"
-                height="42"
-                rx="12"
+                x="52"
+                y="37"
+                width="65"
+                height="26"
+                rx="8"
+                fill="#8b5cf6"/>
+            <rect
+                x="183"
+                y="37"
+                width="65"
+                height="26"
+                rx="8"
                 fill="#8b5cf6"/>
             <ellipse
                 cx="150"
-                cy="92"
-                rx="75"
-                ry="6"
+                cy="91"
+                rx="83"
+                ry="7"
                 fill="#334155"/>
+            <rect
+                x="132"
+                y="65"
+                width="36"
+                height="20"
+                rx="5"
+                fill="#92400e"/>
             <circle
                 cx="150"
-                cy="62"
-                r="8"
+                cy="63"
+                r="7"
                 fill="#fbbf24"/>
         </svg>
     </div>
@@ -806,41 +1077,59 @@ body{
         </div>
         <svg viewBox="0 0 300 100">
             <rect
-                x="35"
-                y="18"
-                width="7"
-                height="70"
+                x="22"
+                y="16"
+                width="8"
+                height="72"
                 fill="#94a3b8"/>
             <rect
-                x="258"
-                y="18"
-                width="7"
-                height="70"
+                x="270"
+                y="16"
+                width="8"
+                height="72"
                 fill="#94a3b8"/>
+            <rect
+                x="30"
+                y="15"
+                width="240"
+                height="7"
+                fill="#64748b"/>
             <path
-                d="M60 60
-                   L85 35
-                   L215 35
-                   L240 60
-                   L245 78
-                   L55 78 Z"
+                d="M48 60
+               L75 36
+               L225 36
+               L252 60
+               L258 80
+               L42 80 Z"
                 fill="#dc2626"/>
             <path
-                d="M92 39 L125 39 L125 57 L75 57 Z"
+                d="M83 40
+               L123 40
+               L123 58
+               L67 58 Z"
                 fill="#7dd3fc"/>
             <path
-                d="M132 39 L205 39 L225 57 L132 57 Z"
+                d="M131 40
+               L204 40
+               L228 58
+               L131 58 Z"
                 fill="#38bdf8"/>
             <circle
-                cx="90"
-                cy="78"
-                r="13"
+                cx="82"
+                cy="80"
+                r="15"
                 fill="#111827"/>
             <circle
-                cx="210"
-                cy="78"
-                r="13"
+                cx="218"
+                cy="80"
+                r="15"
                 fill="#111827"/>
+            <rect
+                x="245"
+                y="48"
+                width="10"
+                height="25"
+                fill="#fbbf24"/>
         </svg>
     </div>
 </div>
@@ -850,19 +1139,29 @@ body{
 ===================================================== -->
 <aside class="side right">
 <div class="section-title">
-    🚘 AUCTION MARKET
+    🚘 CAR MARKET
 </div>
-<div
-    class="market-list"
-    id="market-list">
+<div class="market-panel">
+    <div class="market-heading">
+        <strong>
+            🚗 仕入れ市場
+        </strong>
+        <span>
+            クリックで仕入れ
+        </span>
+    </div>
+    <div
+        class="market-list"
+        id="market-list">
+    </div>
+    <button
+        class="sell-button"
+        id="sell-btn"
+        onclick="sellCar()"
+        disabled>
+        💴 展示車を商談・売却
+    </button>
 </div>
-<button
-    class="sell-button"
-    id="sell-btn"
-    onclick="sellCar()"
-    disabled>
-    💴 展示車を商談・売却
-</button>
 <div class="service-box">
     <div class="service-title">
         🔧 サービス部門
@@ -886,62 +1185,95 @@ const CAR_TYPES=[
     cost:80,
     sell:110,
     svg:`
-<svg viewBox="0 0 360 170">
-<defs>
-<linearGradient id="carRed"
-x1="0" x2="1">
-<stop offset="0%" stop-color="#dc2626"/>
-<stop offset="50%" stop-color="#f87171"/>
-<stop offset="100%" stop-color="#991b1b"/>
-</linearGradient>
-</defs>
-<ellipse
-cx="180"
-cy="145"
-rx="145"
-ry="14"
-fill="#000"
-opacity=".4"/>
-<path
-d="M30 105
-L72 55
-Q90 40 120 40
-L240 40
-Q270 42 286 62
-L325 105
-L335 114
-L330 135
-L28 135
-L25 114Z"
-fill="url(#carRed)"
-stroke="#7f1d1d"
-stroke-width="3"/>
-<path
-d="M88 61
-L120 47
-L120 90
-L65 90Z"
-fill="#7dd3fc"/>
-<path
-d="M130 47
-L225 47
-Q245 48 260 66
-L278 90
-L130 90Z"
-fill="#38bdf8"/>
-<rect
-x="30"
-y="99"
-width="300"
-height="12"
-rx="4"
-fill="#991b1b"/>
-<circle cx="83" cy="134" r="25" fill="#111827"/>
-<circle cx="83" cy="134" r="11" fill="#94a3b8"/>
-<circle cx="278" cy="134" r="25" fill="#111827"/>
-<circle cx="278" cy="134" r="11" fill="#94a3b8"/>
-</svg>
-`
+    <svg viewBox="0 0 360 170">
+        <defs>
+            <linearGradient
+                id="carRed"
+                x1="0"
+                x2="1">
+                <stop
+                    offset="0%"
+                    stop-color="#b91c1c"/>
+                <stop
+                    offset="45%"
+                    stop-color="#ef4444"/>
+                <stop
+                    offset="70%"
+                    stop-color="#f87171"/>
+                <stop
+                    offset="100%"
+                    stop-color="#7f1d1d"/>
+            </linearGradient>
+        </defs>
+        <ellipse
+            cx="180"
+            cy="145"
+            rx="145"
+            ry="14"
+            fill="#000"
+            opacity=".45"/>
+        <path
+            d="M30 105
+            L72 55
+            Q90 40 120 40
+            L240 40
+            Q270 42 286 62
+            L325 105
+            L335 114
+            L330 135
+            L28 135
+            L25 114Z"
+            fill="url(#carRed)"
+            stroke="#7f1d1d"
+            stroke-width="3"/>
+        <path
+            d="M88 61
+            L120 47
+            L120 90
+            L65 90Z"
+            fill="#bae6fd"/>
+        <path
+            d="M130 47
+            L225 47
+            Q245 48 260 66
+            L278 90
+            L130 90Z"
+            fill="#7dd3fc"/>
+        <path
+            d="M32 100
+            L328 100"
+            stroke="#fecaca"
+            stroke-width="3"
+            opacity=".35"/>
+        <rect
+            x="30"
+            y="99"
+            width="300"
+            height="12"
+            rx="4"
+            fill="#991b1b"/>
+        <circle
+            cx="83"
+            cy="134"
+            r="25"
+            fill="#111827"/>
+        <circle
+            cx="83"
+            cy="134"
+            r="11"
+            fill="#cbd5e1"/>
+        <circle
+            cx="278"
+            cy="134"
+            r="25"
+            fill="#111827"/>
+        <circle
+            cx="278"
+            cy="134"
+            r="11"
+            fill="#cbd5e1"/>
+    </svg>
+    `
 },
 {
     id:1,
@@ -949,55 +1281,88 @@ fill="#991b1b"/>
     cost:100,
     sell:140,
     svg:`
-<svg viewBox="0 0 360 170">
-<defs>
-<linearGradient id="carBlue"
-x1="0" x2="1">
-<stop offset="0%" stop-color="#1d4ed8"/>
-<stop offset="50%" stop-color="#60a5fa"/>
-<stop offset="100%" stop-color="#1e40af"/>
-</linearGradient>
-</defs>
-<ellipse
-cx="180"
-cy="145"
-rx="145"
-ry="14"
-fill="#000"
-opacity=".4"/>
-<path
-d="M25 105
-L68 60
-Q85 40 115 40
-L245 40
-Q270 41 288 64
-L328 105
-L338 114
-L334 135
-L25 135
-L22 114Z"
-fill="url(#carBlue)"
-stroke="#1e3a8a"
-stroke-width="3"/>
-<path
-d="M85 63
-L116 48
-L116 90
-L63 90Z"
-fill="#bae6fd"/>
-<path
-d="M126 48
-L225 48
-Q245 49 260 66
-L278 90
-L126 90Z"
-fill="#93c5fd"/>
-<circle cx="80" cy="134" r="25" fill="#111827"/>
-<circle cx="80" cy="134" r="11" fill="#cbd5e1"/>
-<circle cx="280" cy="134" r="25" fill="#111827"/>
-<circle cx="280" cy="134" r="11" fill="#cbd5e1"/>
-</svg>
-`
+    <svg viewBox="0 0 360 170">
+        <defs>
+            <linearGradient
+                id="carBlue"
+                x1="0"
+                x2="1">
+                <stop
+                    offset="0%"
+                    stop-color="#1e40af"/>
+                <stop
+                    offset="45%"
+                    stop-color="#3b82f6"/>
+                <stop
+                    offset="70%"
+                    stop-color="#60a5fa"/>
+                <stop
+                    offset="100%"
+                    stop-color="#1e3a8a"/>
+            </linearGradient>
+        </defs>
+        <ellipse
+            cx="180"
+            cy="145"
+            rx="145"
+            ry="14"
+            fill="#000"
+            opacity=".45"/>
+        <path
+            d="M25 105
+            L68 60
+            Q85 40 115 40
+            L245 40
+            Q270 41 288 64
+            L328 105
+            L338 114
+            L334 135
+            L25 135
+            L22 114Z"
+            fill="url(#carBlue)"
+            stroke="#1e3a8a"
+            stroke-width="3"/>
+        <path
+            d="M85 63
+            L116 48
+            L116 90
+            L63 90Z"
+            fill="#dbeafe"/>
+        <path
+            d="M126 48
+            L225 48
+            Q245 49 260 66
+            L278 90
+            L126 90Z"
+            fill="#93c5fd"/>
+        <path
+            d="M30 98
+            L330 98"
+            stroke="#dbeafe"
+            stroke-width="3"
+            opacity=".3"/>
+        <circle
+            cx="80"
+            cy="134"
+            r="25"
+            fill="#111827"/>
+        <circle
+            cx="80"
+            cy="134"
+            r="11"
+            fill="#cbd5e1"/>
+        <circle
+            cx="280"
+            cy="134"
+            r="25"
+            fill="#111827"/>
+        <circle
+            cx="280"
+            cy="134"
+            r="11"
+            fill="#cbd5e1"/>
+    </svg>
+    `
 },
 {
     id:2,
@@ -1005,54 +1370,99 @@ fill="#93c5fd"/>
     cost:220,
     sell:290,
     svg:`
-<svg viewBox="0 0 360 170">
-<defs>
-<linearGradient id="carSilver"
-x1="0" x2="1">
-<stop offset="0%" stop-color="#64748b"/>
-<stop offset="50%" stop-color="#e2e8f0"/>
-<stop offset="100%" stop-color="#64748b"/>
-</linearGradient>
-</defs>
-<ellipse
-cx="180"
-cy="145"
-rx="145"
-ry="14"
-fill="#000"
-opacity=".4"/>
-<path
-d="M20 105
-L55 58
-Q70 40 100 40
-L260 40
-Q290 42 305 64
-L335 105
-L342 115
-L338 135
-L18 135
-L15 115Z"
-fill="url(#carSilver)"
-stroke="#475569"
-stroke-width="3"/>
-<path
-d="M68 61 L98 48 L98 90 L52 90Z"
-fill="#7dd3fc"/>
-<path
-d="M106 48 L150 48 L150 90 L106 90Z"
-fill="#7dd3fc"/>
-<path
-d="M158 48 L220 48 L243 90 L158 90Z"
-fill="#7dd3fc"/>
-<path
-d="M249 58 L270 58 L297 90 L249 90Z"
-fill="#7dd3fc"/>
-<circle cx="78" cy="134" r="26" fill="#111827"/>
-<circle cx="78" cy="134" r="12" fill="#cbd5e1"/>
-<circle cx="285" cy="134" r="26" fill="#111827"/>
-<circle cx="285" cy="134" r="12" fill="#cbd5e1"/>
-</svg>
-`
+    <svg viewBox="0 0 360 170">
+        <defs>
+            <linearGradient
+                id="carSilver"
+                x1="0"
+                x2="1">
+                <stop
+                    offset="0%"
+                    stop-color="#475569"/>
+                <stop
+                    offset="45%"
+                    stop-color="#f1f5f9"/>
+                <stop
+                    offset="65%"
+                    stop-color="#cbd5e1"/>
+                <stop
+                    offset="100%"
+                    stop-color="#475569"/>
+            </linearGradient>
+        </defs>
+        <ellipse
+            cx="180"
+            cy="145"
+            rx="145"
+            ry="14"
+            fill="#000"
+            opacity=".45"/>
+        <path
+            d="M20 105
+            L55 58
+            Q70 40 100 40
+            L260 40
+            Q290 42 305 64
+            L335 105
+            L342 115
+            L338 135
+            L18 135
+            L15 115Z"
+            fill="url(#carSilver)"
+            stroke="#475569"
+            stroke-width="3"/>
+        <path
+            d="M68 61
+            L98 48
+            L98 90
+            L52 90Z"
+            fill="#bae6fd"/>
+        <path
+            d="M106 48
+            L150 48
+            L150 90
+            L106 90Z"
+            fill="#7dd3fc"/>
+        <path
+            d="M158 48
+            L220 48
+            L243 90
+            L158 90Z"
+            fill="#7dd3fc"/>
+        <path
+            d="M249 58
+            L270 58
+            L297 90
+            L249 90Z"
+            fill="#7dd3fc"/>
+        <path
+            d="M25 98
+            L335 98"
+            stroke="#fff"
+            stroke-width="3"
+            opacity=".45"/>
+        <circle
+            cx="78"
+            cy="134"
+            r="26"
+            fill="#111827"/>
+        <circle
+            cx="78"
+            cy="134"
+            r="12"
+            fill="#cbd5e1"/>
+        <circle
+            cx="285"
+            cy="134"
+            r="26"
+            fill="#111827"/>
+        <circle
+            cx="285"
+            cy="134"
+            r="12"
+            fill="#cbd5e1"/>
+    </svg>
+    `
 },
 {
     id:3,
@@ -1060,58 +1470,101 @@ fill="#7dd3fc"/>
     cost:250,
     sell:330,
     svg:`
-<svg viewBox="0 0 360 170">
-<defs>
-<linearGradient id="carSUV"
-x1="0" x2="1">
-<stop offset="0%" stop-color="#991b1b"/>
-<stop offset="50%" stop-color="#ef4444"/>
-<stop offset="100%" stop-color="#7f1d1d"/>
-</linearGradient>
-</defs>
-<ellipse
-cx="180"
-cy="145"
-rx="150"
-ry="15"
-fill="#000"
-opacity=".45"/>
-<path
-d="M20 108
-L55 57
-Q70 38 105 38
-L255 38
-Q285 40 302 62
-L335 108
-L342 116
-L338 136
-L18 136
-L15 116Z"
-fill="url(#carSUV)"
-stroke="#450a0a"
-stroke-width="4"/>
-<path
-d="M70 62 L103 47 L103 91 L55 91Z"
-fill="#93c5fd"/>
-<path
-d="M112 47 L190 47 L190 91 L112 91Z"
-fill="#7dd3fc"/>
-<path
-d="M199 47 L250 47 Q265 49 278 64 L298 91 L199 91Z"
-fill="#7dd3fc"/>
-<rect
-x="18"
-y="98"
-width="320"
-height="16"
-rx="4"
-fill="#111827"/>
-<circle cx="78" cy="135" r="28" fill="#111827"/>
-<circle cx="78" cy="135" r="13" fill="#64748b"/>
-<circle cx="284" cy="135" r="28" fill="#111827"/>
-<circle cx="284" cy="135" r="13" fill="#64748b"/>
-</svg>
-`
+    <svg viewBox="0 0 360 170">
+        <defs>
+            <linearGradient
+                id="carSUV"
+                x1="0"
+                x2="1">
+                <stop
+                    offset="0%"
+                    stop-color="#7f1d1d"/>
+                <stop
+                    offset="45%"
+                    stop-color="#dc2626"/>
+                <stop
+                    offset="70%"
+                    stop-color="#ef4444"/>
+                <stop
+                    offset="100%"
+                    stop-color="#7f1d1d"/>
+            </linearGradient>
+        </defs>
+        <ellipse
+            cx="180"
+            cy="145"
+            rx="150"
+            ry="15"
+            fill="#000"
+            opacity=".48"/>
+        <path
+            d="M20 108
+            L55 57
+            Q70 38 105 38
+            L255 38
+            Q285 40 302 62
+            L335 108
+            L342 116
+            L338 136
+            L18 136
+            L15 116Z"
+            fill="url(#carSUV)"
+            stroke="#450a0a"
+            stroke-width="4"/>
+        <path
+            d="M70 62
+            L103 47
+            L103 91
+            L55 91Z"
+            fill="#bae6fd"/>
+        <path
+            d="M112 47
+            L190 47
+            L190 91
+            L112 91Z"
+            fill="#7dd3fc"/>
+        <path
+            d="M199 47
+            L250 47
+            Q265 49 278 64
+            L298 91
+            L199 91Z"
+            fill="#7dd3fc"/>
+        <rect
+            x="18"
+            y="98"
+            width="320"
+            height="16"
+            rx="4"
+            fill="#111827"/>
+        <path
+            d="M40 96
+            L320 96"
+            stroke="#fecaca"
+            stroke-width="3"
+            opacity=".35"/>
+        <circle
+            cx="78"
+            cy="135"
+            r="28"
+            fill="#111827"/>
+        <circle
+            cx="78"
+            cy="135"
+            r="13"
+            fill="#64748b"/>
+        <circle
+            cx="284"
+            cy="135"
+            r="28"
+            fill="#111827"/>
+        <circle
+            cx="284"
+            cy="135"
+            r="13"
+            fill="#64748b"/>
+    </svg>
+    `
 },
 {
     id:4,
@@ -1119,66 +1572,101 @@ fill="#111827"/>
     cost:350,
     sell:460,
     svg:`
-<svg viewBox="0 0 360 170">
-<defs>
-<linearGradient id="carLuxury"
-x1="0" x2="1">
-<stop offset="0%" stop-color="#020617"/>
-<stop offset="45%" stop-color="#475569"/>
-<stop offset="70%" stop-color="#1e293b"/>
-<stop offset="100%" stop-color="#020617"/>
-</linearGradient>
-</defs>
-<ellipse
-cx="180"
-cy="145"
-rx="150"
-ry="14"
-fill="#000"
-opacity=".5"/>
-<path
-d="M20 108
-L68 67
-Q88 47 120 47
-L245 47
-Q270 48 287 67
-L330 108
-L340 116
-L337 136
-L18 136
-L15 116Z"
-fill="url(#carLuxury)"
-stroke="#64748b"
-stroke-width="3"/>
-<path
-d="M90 67 L120 53 L120 91 L65 91Z"
-fill="#38bdf8"
-opacity=".8"/>
-<path
-d="M129 53
-L220 53
-Q243 54 258 69
-L277 91
-L129 91Z"
-fill="#38bdf8"
-opacity=".75"/>
-<rect
-x="22"
-y="99"
-width="316"
-height="10"
-rx="4"
-fill="#020617"/>
-<circle cx="80" cy="135" r="25" fill="#020617"/>
-<circle cx="80" cy="135" r="11" fill="#94a3b8"/>
-<circle cx="282" cy="135" r="25" fill="#020617"/>
-<circle cx="282" cy="135" r="11" fill="#94a3b8"/>
-</svg>
-`
+    <svg viewBox="0 0 360 170">
+        <defs>
+            <linearGradient
+                id="carLuxury"
+                x1="0"
+                x2="1">
+                <stop
+                    offset="0%"
+                    stop-color="#020617"/>
+                <stop
+                    offset="40%"
+                    stop-color="#334155"/>
+                <stop
+                    offset="60%"
+                    stop-color="#64748b"/>
+                <stop
+                    offset="100%"
+                    stop-color="#020617"/>
+            </linearGradient>
+        </defs>
+        <ellipse
+            cx="180"
+            cy="145"
+            rx="150"
+            ry="14"
+            fill="#000"
+            opacity=".5"/>
+        <path
+            d="M20 108
+            L68 67
+            Q88 47 120 47
+            L245 47
+            Q270 48 287 67
+            L330 108
+            L340 116
+            L337 136
+            L18 136
+            L15 116Z"
+            fill="url(#carLuxury)"
+            stroke="#94a3b8"
+            stroke-width="3"/>
+        <path
+            d="M90 67
+            L120 53
+            L120 91
+            L65 91Z"
+            fill="#7dd3fc"
+            opacity=".85"/>
+        <path
+            d="M129 53
+            L220 53
+            Q243 54 258 69
+            L277 91
+            L129 91Z"
+            fill="#38bdf8"
+            opacity=".75"/>
+        <rect
+            x="22"
+            y="99"
+            width="316"
+            height="10"
+            rx="4"
+            fill="#020617"/>
+        <path
+            d="M35 96
+            L325 96"
+            stroke="#e2e8f0"
+            stroke-width="2"
+            opacity=".4"/>
+        <circle
+            cx="80"
+            cy="135"
+            r="25"
+            fill="#020617"/>
+        <circle
+            cx="80"
+            cy="135"
+            r="11"
+            fill="#94a3b8"/>
+        <circle
+            cx="282"
+            cy="135"
+            r="25"
+            fill="#020617"/>
+        <circle
+            cx="282"
+            cy="135"
+            r="11"
+            fill="#94a3b8"/>
+    </svg>
+    `
 }
 ];
 /* =========================================================
-   STATE
+   GAME STATE
 ========================================================= */
 let gameState={
     money:500,
@@ -1199,10 +1687,16 @@ function renderMarket(){
         const el=
             document.createElement("div");
         el.className="market";
-        el.id=`market-${index}`;
+        el.id=
+            `market-${index}`;
         el.innerHTML=`
-            <div class="market-name">
-                ${car.name}
+            <div class="market-left">
+                <div class="market-name">
+                    ${car.name}
+                </div>
+                <div class="market-desc">
+                    仕入れて展示
+                </div>
             </div>
             <div class="market-price">
                 ${car.cost}万円
